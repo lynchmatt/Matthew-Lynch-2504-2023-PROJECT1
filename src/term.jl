@@ -27,6 +27,8 @@ Creates the zero term.
 """
 zero(::Type{Term})::Term = Term(0,0)
 
+@show zero(Term)
+
 """
 Creates the unit term.
 """
@@ -40,6 +42,7 @@ one(::Type{Term})::Term = Term(1,0)
 Show a term.
 """
 show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)") #\cdot + [TAB]
+
 
 ########################
 # Queries about a term #

@@ -1,0 +1,50 @@
+using Pkg
+Pkg.activate(".")
+
+include("poly_factorization_project.jl")
+
+println("First we create a polynomial x, with coefficient 1 and power 1.")
+
+x = x_poly()
+
+println("This polynomial can then be manipulated to create other polynomials: ")
+
+poly1 = 3x^3 + 4x + 2
+poly2 = x^2 + - 5x + (-8)
+poly3 = x^2 + (-16)
+
+println(poly1)
+println(poly2)
+println(poly3)
+
+println("We can also create specific types of polynomials, like cyclotonic polynomials or linear monic polynomials, using only integer input")
+
+cyclo = cyclotonic_polynomial(3)
+monic = linear_monic_polynomial(4)
+
+println(cyclo)
+println(monic)
+
+println("We can gain information about polynomials, such as the number of terms, highest degree and evaluate it at a given point x.")
+
+println("$poly1 has highest degree $(degree(poly1)), has $(length(poly1)) and has a value of $(evaluate(poly1, 2)) at x=2.")
+
+println("A polynomial's derivative can be found also: ")
+
+println("The derivative of $poly2 is $(derivative(poly2))")
+
+println("We can also do the operations of addition: ")
+println("$poly1 + $poly2 = $(poly1 + poly2)")
+
+println("Multiplication")
+println("$poly1 * $poly2 = $(poly1 * poly2)")
+
+println("Substraction: ")
+println("$poly1 - $poly2 = $(poly1 - poly2)")
+
+println("And division modulo prime, where the output is a tuple of the quotient and the remainder. For example mod 3: ")
+println("($poly3) ÷ ($poly1) mod 3 = $(divide(poly3, poly1)(3))")
+
+println("We can also factorise polynomials modulo p, where p is prime. Output is a vector of tuples of polynomials and their multiplicity,
+ such that their product mod p is the input polynomial.  Again using mod 3: ")
+println("$poly1 factorised mod 3 = $(factor(poly1,3))")
