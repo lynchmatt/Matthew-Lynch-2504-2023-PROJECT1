@@ -20,5 +20,11 @@ y3 = -x^3 + 5x + (-5)
 
 show(y3)
 
+import Pkg; Pkg.add("Subscripts")
+using Subscripts
+super("1")
+
+println(÷)
+
 # bring up the base.show issue?
-# also bring up the 'works' issue?
+# ask if it's valid to use an additional package to easily convert to superscripts?

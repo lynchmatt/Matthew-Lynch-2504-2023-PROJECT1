@@ -125,23 +125,23 @@ end
 """
 Show a polynomial.
 """
-function show(io::IO, p::Polynomial) 
+function show(io::IO, p::Polynomial)
     if iszero(p)
         print(io, "0")
     else
-        for (i,t) in enumerate(p.terms)
+        for (i,t) in enumerate(reverse(p.terms))
             if !iszero(t)
                 if i == 1 # if first term, only print sign if negative
                     print(io, t.coeff > 0 ? "$(string(t)[1:end])" : "- $(string(t)[2:end])")
                 else # if not first term, print plus or minus
-                    print(io, t.coeff < 0 ? " - $(string(t)[2:end])" : " + $t")
-                    #print(io, t.coeff > 0 ? "$(t.coeff)" : "- $(abs(t.coeff))")
+                    print(io, t.coeff < 0 ? " - $(string(t)[2:end])" : " + $(string(t)[1:end])")
                 end
-                # print the term. if next term's coefficient is negative, print minus, if not print plus. Keep that if next term doesnt exist, dont print operator.
+                # print the term. if next term's coefficient is negative, print minus, if not print plus.
             end
         end
     end
 end
+
 
 # function show(io::IO, p::Polynomial) 
 #     println("works")
