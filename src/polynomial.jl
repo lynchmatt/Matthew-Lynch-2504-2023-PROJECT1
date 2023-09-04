@@ -13,6 +13,7 @@
 """
 A Polynomial type - designed to be for polynomials with integer coefficients.
 """
+
 struct Polynomial
 
     #A zero packed vector of terms
@@ -126,16 +127,45 @@ Show a polynomial.
 """
 function show(io::IO, p::Polynomial) 
     if iszero(p)
-        print(io,"0")
+        print(io, "0")
     else
-        n = length(p.terms)
         for (i,t) in enumerate(p.terms)
             if !iszero(t)
-                print(io, t, i != n ? " + " : "")
+                if i == 1 # if first term, only print sign if negative
+                    print(io, t.coeff > 0 ? "$(string(t)[1:end])" : "- $(string(t)[2:end])")
+                else # if not first term, print plus or minus
+                    print(io, t.coeff < 0 ? " - $(string(t)[2:end])" : " + $t")
+                    #print(io, t.coeff > 0 ? "$(t.coeff)" : "- $(abs(t.coeff))")
+                end
+                # print the term. if next term's coefficient is negative, print minus, if not print plus. Keep that if next term doesnt exist, dont print operator.
             end
         end
     end
 end
+
+# function show(io::IO, p::Polynomial) 
+#     println("works")
+#     if iszero(p)
+#         print(io, "0")
+#     else
+#         for (i,t) in enumerate(p.terms)
+#             if !iszero(t)
+#                 if i == 1 # if first term, only print sign if negative
+#                     print(io, t.coeff > 0 ? "$(string(t)[1:end])" : "- $(string(t)[2:end])")
+#                 else # if not first term, print plus or minus
+#                     print(io, t.coeff < 0 ? " - $(string(t)[2:end])" : " + $t")
+#                     #print(io, t.coeff > 0 ? "$(t.coeff)" : "- $(abs(t.coeff))")
+#                 end
+#                 # print the term. if next term's coefficient is negative, print minus, if not print plus. Keep that if next term doesnt exist, dont print operator.
+#             end
+#         end
+#     end
+# end
+
+# print(io, t.coeff > 0 ? "+ $(abs(t.coeff))" : "- $(abs(t.coeff))")
+
+#instead just split into cases of if first element vs not. Then deal with positives and negatives
+
 
 ##############################################
 # Iteration over the terms of the polynomial #

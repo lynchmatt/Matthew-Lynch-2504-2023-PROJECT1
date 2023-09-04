@@ -10,6 +10,10 @@
 # Term type and construction #
 ##############################
 
+import Base: %
+import Base: push!, pop!, iszero, show, isless, map, map!, iterate, length, last
+import Base: +, -, *, mod, %, ÷, ==, ^, rand, rem, zero, one
+
 """
 A term.
 """
@@ -27,8 +31,6 @@ Creates the zero term.
 """
 zero(::Type{Term})::Term = Term(0,0)
 
-@show zero(Term)
-
 """
 Creates the unit term.
 """
@@ -41,7 +43,32 @@ one(::Type{Term})::Term = Term(1,0)
 """
 Show a term.
 """
-show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)") #\cdot + [TAB]
+#show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)") #\cdot + [TAB]
+
+#####################################
+# Updated Display - Pretty Printing #
+#####################################
+
+function show(io::IO, t::Term)
+    #define the coefficient and degree parts separately, then combine into one with io
+    coefficient, xdegree = 0,0
+    if t.coeff == -1
+        coefficient = "-"
+    elseif t.coeff == 1
+        coefficient = ""
+    else
+        coefficient = t.coeff
+    end
+    if t.degree == 0
+        xdegree = ""
+    elseif t.degree == 1
+        xdegree = "x"
+    else
+        xdegree = "x^$(t.degree)"
+    end  
+    print(io, "$coefficient$xdegree")
+end 
+
 
 
 ########################
@@ -52,6 +79,8 @@ show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)") #\cdot + [TAB]
 Check if a term is 0.
 """
 iszero(t::Term)::Bool = iszero(t.coeff)
+
+iszero(Term(0,0))
 
 """
 Compare two terms.
