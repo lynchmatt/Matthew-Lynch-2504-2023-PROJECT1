@@ -43,32 +43,104 @@ one(::Type{Term})::Term = Term(1,0)
 """
 Show a term.
 """
-#show(io::IO, t::Term) = print(io, "$(t.coeff)⋅x^$(t.degree)") #\cdot + [TAB]
+function show(io::IO, t::Term)
+#define the coefficient and degree parts separately, then combine into one with io
+#term(1,0)
+    #first determine if constant
+    coefficient, xdegree = 0,0
+    if t.degree == 0
+        xdegree = "" # removes the x^0
+        # now checking if coefficient is one. if so, print +1 or -1
+        if t.coeff == -1 
+            coefficient = "-1"
+        elseif t.coeff == 1
+            coefficient = "1"
+        else
+            coefficient = t.coeff
+        end
+    elseif t.degree == 1 #non-constant scenario, degree is one. still need to remove coefficients if one
+        xdegree = "x"
+        if t.coeff == -1 
+            coefficient = "-"
+        elseif t.coeff == 1
+            coefficient = ""
+        else
+            coefficient = t.coeff
+        end
+    else # nonconstant scenario, degree is not one or zero. still need to remove coefficients if one
+        xdegree = "x^$(t.degree)"
+        if t.coeff == -1 
+            coefficient = "-"
+        elseif t.coeff == 1
+            coefficient = ""
+        else
+            coefficient = t.coeff
+        end
+    end 
+    print(io, "$coefficient$xdegree")
+end
 
 #####################################
 # Updated Display - Pretty Printing #
 #####################################
 
-function show(io::IO, t::Term)
-    #define the coefficient and degree parts separately, then combine into one with io
-    coefficient, xdegree = 0,0
-    if t.coeff == -1
-        coefficient = "-"
-    elseif t.coeff == 1
-        coefficient = ""
-    else
-        coefficient = t.coeff
-    end
-    if t.degree == 0
-        xdegree = ""
-    elseif t.degree == 1
-        xdegree = "x"
-    else
-        xdegree = "x^$(t.degree)"
-    end  
-    print(io, "$coefficient$xdegree")
-end 
+# function show(io::IO, t::Term)
+#     #define the coefficient and degree parts separately, then combine into one with io
+#     #first determine if constant
+#     coefficient, xdegree = 0,0
+#     if t.degree == 0
+#         xdegree = "" # removes the x^0
+#         # now checking if coefficient is one. if so, print +1 or -1
+#         if t.coeff == -1 
+#             coefficient = "-1"
+#         elseif t.coeff == 1
+#             coefficient = "1"
+#         else
+#             coefficient = t.coeff
+#         end
+#     elseif t.degree == 1 #non-constant scenario, degree is one. still need to remove coefficients if one
+#         xdegree = "x"
+#         if t.coeff == -1 
+#             coefficient = "-"
+#         elseif t.coeff == 1
+#             coefficient = ""
+#         else
+#             coefficient = t.coeff
+#         end
+#     else # nonconstant scenario, degree is not one or zero. still need to remove coefficients if one
+#         xdegree = "x^$(t.degree)"
+#         if t.coeff == -1 
+#             coefficient = "-"
+#         elseif t.coeff == 1
+#             coefficient = ""
+#         else
+#             coefficient = t.coeff
+#         end
+#     end 
+#     print(io, "$coefficient$xdegree")
+# end 
 
+
+## version without plusminus one working when degree is zero
+# function show(io::IO, t::Term)
+#     #define the coefficient and degree parts separately, then combine into one with io
+#     coefficient, xdegree = 0,0
+#     if t.coeff == -1
+#         coefficient = "-"
+#     elseif t.coeff == 1
+#         coefficient = ""
+#     else
+#         coefficient = t.coeff
+#     end
+#     if t.degree == 0
+#         xdegree = ""
+#     elseif t.degree == 1
+#         xdegree = "x"
+#     else
+#         xdegree = "x^$(t.degree)"
+#     end  
+#     print(io, "$coefficient$xdegree")
+# end 
 
 
 ########################

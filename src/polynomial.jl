@@ -122,6 +122,7 @@ end
 # Display #
 ###########
 
+
 """
 Show a polynomial.
 """
@@ -129,7 +130,14 @@ function show(io::IO, p::Polynomial)
     if iszero(p)
         print(io, "0")
     else
-        for (i,t) in enumerate(reverse(p.terms))
+    # make a local variable, false if lowest_to_highest is false or doesnt exist, and true otherwise
+    global localorder = true
+    if lowest_to_highest == false || ((@isdefined lowest_to_highest) == false)
+        localorder = false
+    else
+        localorder = true
+    end
+        for (i,t) in (localorder ? enumerate(p.terms) : enumerate(reverse(p.terms))) 
             if !iszero(t)
                 if i == 1 # if first term, only print sign if negative
                     print(io, t.coeff > 0 ? "$(string(t)[1:end])" : "- $(string(t)[2:end])")
