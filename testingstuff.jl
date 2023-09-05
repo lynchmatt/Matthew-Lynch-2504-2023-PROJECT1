@@ -50,7 +50,9 @@ println(÷)
 function alphabetprinter()
     alphabet = ["a", "b", "c", "d"]
     # make local variable
-    if out_of_order == false || ((@isdefined out_of_order) == false)
+    if (@isdefined out_of_order) == false
+        localvar = false
+    elseif out_of_order == false 
         localvar = false
     else
         localvar = true

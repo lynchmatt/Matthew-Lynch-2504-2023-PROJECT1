@@ -132,7 +132,9 @@ function show(io::IO, p::Polynomial)
     else
     # make a local variable, false if lowest_to_highest is false or doesnt exist, and true otherwise
     global localorder = true
-    if lowest_to_highest == false || ((@isdefined lowest_to_highest) == false)
+    if (@isdefined lowest_to_highest) == false
+        localorder = false
+    elseif lowest_to_highest == false
         localorder = false
     else
         localorder = true
