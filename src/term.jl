@@ -80,6 +80,55 @@ function show(io::IO, t::Term)
     print(io, "$coefficient$xdegree")
 end
 
+super_chars = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']
+function super(s)
+    res = ""
+    for c in s
+        if c >= '0' && c <= '9'
+            res *= super_chars[c - '0' + 1]
+        end
+    end
+    return res
+end
+
+function show2(io::IO, t::Term)
+    #define the coefficient and degree parts separately, then combine into one with io
+    #term(1,0)
+        #first determine if constant
+        coefficient, xdegree = 0,0
+        if t.degree == 0
+            xdegree = "" # removes the x^0
+            # now checking if coefficient is one. if so, print +1 or -1 when it's the constant term
+            if t.coeff == -1 
+                coefficient = "-1"
+            elseif t.coeff == 1
+                coefficient = "1"
+            else
+                coefficient = t.coeff
+            end
+        elseif t.degree == 1 #non-constant scenario, degree is one. still need to remove coefficients if one
+            xdegree = ""
+            if t.coeff == -1 
+                coefficient = "-"
+            elseif t.coeff == 1
+                coefficient = ""
+            else
+                coefficient = t.coeff
+            end
+        else # nonconstant scenario, degree is not one or zero. still need to remove coefficients if one
+            xdegree = "$(super(string(t.degree)))"
+            if t.coeff == -1 
+                coefficient = "-"
+            elseif t.coeff == 1
+                coefficient = ""
+            else
+                coefficient = t.coeff
+            end
+        end 
+        print(io, "$(coefficient)x$xdegree")
+    end
+
+
 #####################################
 # Updated Display - Pretty Printing #
 #####################################

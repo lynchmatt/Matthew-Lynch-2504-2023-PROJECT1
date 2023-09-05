@@ -6,11 +6,13 @@ include("poly_factorization_project.jl")
 x = x_poly()
 
 show(Term(2,3)) # will display constants correctly when the coefficient is non zero, ie without x^0
-
+show2(stdout, Term(2,3))
 
 y1 = -1x^1 + 2x^3 -3x^0 -4x^2  #will display without +/-1, without powers of zero, and without x^1 when put into polynomial, but not when using show?
 y2 = 1x^0 + -3x^2 # need to print 1 as constant, currently won't
 show(y1)
+
+show2(stdout, y1)
 
 show(Term(-1,1))
 
