@@ -3,50 +3,57 @@ Pkg.activate(".")
 
 include("poly_factorization_project.jl")
 
+l = PolynomialSparse([Term(2,3), Term(3,4)])
+
+l.terms[2] # access specific term in polynomial l
+
+l.terms[2].coeff # access the coefficeint of a specific term of polynomial l1
+
+l.dict[3] # access the term of degree 3 of polynomial l
+
+get_element(l.terms, l.dict, 3) # access the term of degree 3 of polynomial 1, but nicer
+
+k = PolynomialSparse([Term(2,3)])
+
 x = x_poly()
+typeof(x)
+
+y = one(Polynomial)
+
+h = Term(1,1)
+
 
 show(Term(2,3)) # will display constants correctly when the coefficient is non zero, ie without x^0
-show2(stdout, Term(2,3))
 
 y1 = -1x^1 + 2x^3 -3x^0 -4x^2  #will display without +/-1, without powers of zero, and without x^1 when put into polynomial, but not when using show?
 y2 = 1x^0 + -3x^2 # need to print 1 as constant, currently won't
 show(y1)
 
-show2(stdout, y1)
+using DataStructures
+l = MutableLinkedList{Int}(1,2,3)
+k = PolynomialSparse([Term(2,3), Term(4,5), Term(1,1)])
+for (i,t) in enumerate(k)
+    println(t.coeff)
+end
 
-show(Term(-1,1))
+dict = Dict(1=> "a", 2=>"b", 4=> "d")
 
-a = (Term(1,0)) # will only display correctly if i do show(), is this fine?
+for (i,t) in enumerate(dict)
+    println(t[2]) #use t[1] to get key, t[2] to get value. using only t will give each key-value pair
+end
 
-show(y1)
-show(y2)
+insert_sorted!(l, dict, 2, 2)
 
-y3 =  5x -x^3 + (-5)
 
-show(y3)
+
+
 
 import Pkg; Pkg.add("Subscripts")
 using Subscripts
 super("1")
 
-println(÷)
 
 # bring up the base.show issue?
-# ask if it's valid to use an additional package to easily convert to superscripts?
-
-
-# function globaltesting()
-#     if a == false || a === nothing
-#         println("a is false or has not been set")
-#     else
-#         println("a is true")
-#     end
-# end
-
-# globaltesting()
-
-# introduce another local variable to keep == out of if-else? works
-# sort out the global part to make sure works in a function
 
 
 function alphabetprinter()
@@ -64,4 +71,17 @@ function alphabetprinter()
     end
 end
 
-alphabetprinter()
+
+function +(p1::PolynomialSparse, p2::PolynomialSparse)::PolynomialSparse
+    a = deepcopy(p1)
+    b = deepcopy(p2)
+    for (i,t) in enumerate(a.dict)
+        println(t[1])
+    end
+
+end
+
+k = PolynomialSparse([Term(2,3)])
+l = PolynomialSparse([Term(2,3), Term(3,4)])
+
++(l,k) 

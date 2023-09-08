@@ -121,7 +121,7 @@ end
 ###########
 # Display #
 ###########
-
+lowest_to_highest = false
 
 """
 Show a polynomial.
