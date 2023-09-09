@@ -55,7 +55,7 @@ function +(p1::PolynomialSparse, p2::PolynomialSparse)::PolynomialSparse
     # need to check each key of a and compare with b. If b has a key of the same degree, add their coefficients together and make a key of that degree - if their added coefficients equal
     # zero, don't make that degree into a key. If one polynomial has a key that the other doesn't, preserve the original term and insert it into the linkedlist.
     # need to check both directions?
-
+    end
     for t in p2
         p += t
     end

@@ -71,7 +71,7 @@ Polynomial(t::Term) = Polynomial([t])
 """
 Construct a polynomial of the form x^p-x.
 """
-cyclotonic_polynomial(p::Int) = Polynomial([Term(1,p), Term(-1,0)])
+cyclotonic_polynomial(p::Int) = Polynomial([Term(1,p), Term(-1,1)])
 
 
 """
@@ -317,10 +317,10 @@ Warning this may not make sense if n does not divide all the coefficients of p.
 """
 Take the mod of a polynomial with an integer.
 """
-function mod(f::Polynomial, p::Int)::Polynomial
+function mod(f::Polynomial, p::Int)::Polynomial #specify the polynomial and what mod
     f_out = deepcopy(f)
-    for i in 1:length(f_out.terms)
-        f_out.terms[i] = mod(f_out.terms[i], p)
+    for i in 1:length(f_out.terms) #iterate for as many terms
+        f_out.terms[i] = mod(f_out.terms[i], p) # take term mod p
     end
     return trim!(f_out)
         
@@ -339,7 +339,7 @@ Power of a polynomial mod prime.
 function pow_mod(p::Polynomial, n::Int, prime::Int)
     n < 0 && error("No negative power")
     out = one(p)
-    for _ in 1:n
+    for _ in 1:n #up to power
         out *= p
         out = mod(out, prime)
     end

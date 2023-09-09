@@ -10,18 +10,31 @@ using DataStructures, Random
 # iteration #
 #############
 
+## copy from datastructures
+# Base.iterate(l::MutableLinkedList) = l.len == 0 ? nothing : (l.node.next.data, l.node.next.next)
+# Base.iterate(l::MutableLinkedList, n::ListNode) = n === l.node ? nothing : (n.data, n.next)
+
 # """
 # Makes the linked list iterable. 
 # """
-# function iterate(lst::MutableLinkedList{Term}, state=lst.node.next)
+# function iterate(lst::MutableLinkedList{T}, state=lst.node.next) where T
 #     state == lst.node.prev ? nothing : (lst.node.data, lst.node.next)
 # end
+
+
+# """
+# Makes the linked list iterable. 
+# """
+# function iterate(lst::MutableLinkedList{T}, state=lst.node.next) where T <: Term
+#     state == lst.node.prev ? nothing : (lst.node.data, lst.node.next)
+# end
+
+
 
 #########################
 # Demonstrate iteration #
 #########################
 
-# l = MutableLinkedList{Int}([10,25,35]...)
 
 # for d in l
 #     print(d, "\t")
@@ -74,7 +87,7 @@ function insert_sorted!(    lst::MutableLinkedList{Term},
     end
 
     #if here then current_node points at right place
-    new_node = DataStructures.ListNode{V}(value) #create a new node
+    new_node = DataStructures.ListNode{Term}(value) #create a new node
 
     #tie new_node between current_node.prev and current_node
     new_node.prev = current_node.prev 
@@ -96,7 +109,7 @@ function insert_sorted!(    lst::MutableLinkedList{Term},
 Assumes the dictionary `dict` has the key `key`. and it is pointing at the linked list.
 """
 function delete_element!(   lst::MutableLinkedList{Term}, 
-                            dict::Dict{Int, DataStructures.ListNode{Int}},
+                            dict::Dict{Int, DataStructures.ListNode{Term}},
                             key::Int)::Nothing
 
     haskey(dict, key) || error("Key is not in dict")

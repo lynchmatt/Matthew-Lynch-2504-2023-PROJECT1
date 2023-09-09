@@ -1,7 +1,7 @@
 #############################################################################
 #############################################################################
 #
-# This file defines the polynomialsparese type with several operations 
+# This file defines the polynomialsparse type with several operations 
 #                                                                               
 #############################################################################
 #############################################################################
@@ -9,7 +9,6 @@
 ####################################
 # Polynomial type and construction #
 ####################################
-
 using DataStructures
 
 """
@@ -17,20 +16,16 @@ A PolynomialSparse type - designed to be for polynomials with integer coefficien
 """
 
 struct PolynomialSparse
-    #A zero packed vector of terms
-    #Terms are assumed to be in order with first term having degree 0, second degree 1, and so fourth
-    #until the degree of the polynomial. The leading term (i.e. last) is assumed to be non-zero except 
-    #for the zero polynomial where the vector is of length 1.
-    #Note: at positions where the coefficient is 0, the power of the term is also 0 (this is how the Term type is designed)
-    terms:: MutableLinkedList{Term} # linked list contains node, which contain the data, the previous index and the next index
-    dict:: Dict{Int, DataStructures.ListNode{Term}}    #terms will changed to be a linked list of terms. need a field for the dictionary
+
+    terms::MutableLinkedList{Term} 
+    dict::Dict{Int, DataStructures.ListNode{Term}} 
+
+    #Inner constructor of the 0 polynomial
+    PolynomialSparse() = new(MutableLinkedList{Term}(zero(Term)), Dict{Int, DataStructures.ListNode{Term}}(0=>DataStructures.ListNode{Term}(zero(Term))))
     
-    #Inner constructor of 0 polynomial
-    PolynomialSparse() = new(MutableLinkedList{Term}(), Dict{Int, DataStructures.ListNode{Term}}())
 
     #Inner constructor of polynomial based on arbitrary list of terms
     function PolynomialSparse(terms::Vector{Term})
-
         #Filter the vector so that there is not more than a single zero term
         terms = sort(filter((t)->!iszero(t), terms))
         if isempty(terms)
@@ -48,43 +43,47 @@ struct PolynomialSparse
     end
 end
 
-# """
-# This function maintains the invariant of the Polynomial type so that there are no zero terms beyond the highest
-# non-zero term. 
-# """
-# function trim!(p::PolynomialSparse)::PolynomialSparse
-#     i = length(p.terms)
-#     while i > 1
-#         if iszero(p.terms[i])
-#             pop!(p.terms)
-#         else
-#             break
-#         end
-#         i -= 1
-#     end
-#     return p
-# end
+"""
+This function maintains the invariant of the Polynomial type so that there are no zero terms beyond the highest
+non-zero term. 
+"""
+function trim!(p::PolynomialSparse)::PolynomialSparse
+    i = length(p.terms)
+    while i > 0
+        if iszero(p.terms[i])
+            println("zero found")
+            @show a = first(p.terms)
+            @show a.degree
+            delete_element!(p.terms, p.dict, a.degree)
+        else
+            nothing
+        end
+        i = i-1
+    end
+    return p
+end
+
 
 """
 Construct a polynomial with a single term.
 """
 PolynomialSparse(t::Term) = PolynomialSparse([t])
 
-# """
-# Construct a polynomial of the form x^p-x.
-# """
-# cyclotonic_polynomialsparse(polyType::Type{<:PolynomialSparse}, p::Int) = PolynomialSparse([Term(1,p), Term(-1,0)])
+"""
+Construct a polynomial of the form x^p-x.
+"""
+cyclotonic_polynomialsparse(p::Int) = PolynomialSparse([Term(1,p), Term(-1,1)])
 
 
-# """
-# Construct a polynomial of the form x-n.
-# """
-# linear_monic_polynomialsparse(n::Int) = PolynomialSparse([Term(1,1), Term(-n,0)])
+"""
+Construct a polynomial of the form x-n.
+"""
+linear_monic_polynomialsparse(n::Int) = PolynomialSparse([Term(1,1), Term(-n,0)])
 
 """
 Construct a polynomial of the form x.
 """
-x_polys() = PolynomialSparse(Term(1,1))
+x_polysparse() = PolynomialSparse(Term(1,1))
 
 """
 Creates the zero polynomial.
@@ -141,7 +140,7 @@ function show(io::IO, p::PolynomialSparse)
     else
         localorder = true
     end
-        for (i,t) in (localorder ? enumerate(p.terms, 1) : enumerate(reverse((p.terms))))
+        for (i,t) in (localorder ? enumerate(p.terms) : enumerate(reverse((p.terms))))
             if !iszero(p.terms[i])
                 if i == 1 # if first term, only print sign if negative
                     print(io, t.coeff > 0 ? "$(string(t)[1:end])" : "- $(string(t)[2:end])")
@@ -160,53 +159,55 @@ end
 # # Iteration over the terms of the polynomial #
 # ##############################################
 
-# """
-# Allows to do iteration over the non-zero terms of the polynomial. This implements the iteration interface.
-# """
-# iterate(p::Polynomial, state=1) = iterate(p.terms, state)
+"""
+Allows to do iteration over the non-zero terms of the polynomial. This implements the iteration interface.
+"""
+iterate(p::PolynomialSparse, state=1) = iterate(p.terms, state)
+
+
 
 # ##############################
 # # Queries about a polynomial #
 # ##############################
 
-# """
-# The number of terms of the polynomial.
-# """
-# length(p::Polynomial) = length(p.terms) 
+"""
+The number of terms of the polynomial.
+"""
+length(p::PolynomialSparse) = length(p.terms)
 
-# """
-# The leading term of the polynomial.
-# """
-# leading(p::Polynomial)::Term = isempty(p.terms) ? zero(Term) : last(p.terms) 
+"""
+The leading term of the polynomial.
+"""
+leading(p::PolynomialSparse)::Term = isempty(p.terms) ? zero(Term) : maximum(p.terms) 
 
-# """
-# Returns the coefficients of the polynomial.
-# """
-# coeffs(p::Polynomial)::Vector{Int} = [t.coeff for t in p]
+"""
+Returns a vector of the coefficients of the polynomial.
+"""
+coeffs(p::PolynomialSparse)::Vector{Int} = [t.coeff for t in p.terms]
 
-# """
-# The degree of the polynomial.
-# """
-# degree(p::Polynomial)::Int = leading(p).degree 
+"""
+The degree of the polynomial.
+"""
+degree(p::PolynomialSparse)::Int = leading(p).degree
 
-# """
-# The content of the polynomial is the GCD of its coefficients.
-# """
-# content(p::Polynomial)::Int = euclid_alg(coeffs(p))
+"""
+The content of the polynomial is the GCD of its coefficients.
+"""
+content(p::PolynomialSparse)::Int = euclid_alg(coeffs(p))
 
-# """
-# Evaluate the polynomial at a point `x`.
-# """
-# evaluate(f::Polynomial, x::T) where T <: Number = sum(evaluate(t,x) for t in f)
+"""
+Evaluate the polynomial at a point `x`.
+"""
+evaluate(f::PolynomialSparse, x::T) where T <: Number = sum(evaluate(t,x) for t in f.terms)
 
 # ################################
 # # Pushing and popping of terms #
 # ################################
 
-# """
-# Push a new term into the polynomial.
-# """
-# #Note that ideally this would throw and error if pushing another term of degree that is already in the polynomial
+"""
+Push a new term into the polynomial.
+"""
+#Note that ideally this would throw an error if pushing another term of degree that is already in the polynomial
 # function push!(p::Polynomial, t::Term) 
 #     if t.degree <= degree(p)
 #         p.terms[t.degree + 1] = t
@@ -237,33 +238,49 @@ end
 """
 Check if the polynomial is zero.
 """
-iszero(p::PolynomialSparse)::Bool = p.terms == [Term(0,0)]
+iszero(p::PolynomialSparse)::Bool = p.terms == MutableLinkedList{Term}(zero(Term))
 
 # #################################################################
 # # Transformation of the polynomial to create another polynomial #
 # #################################################################
 
-# """
-# The negative of a polynomial.
-# """
-# -(p::Polynomial) = Polynomial(map((pt)->-pt, p.terms))
+"""
+The negative of a polynomial.
+"""
 
-# """
-# Create a new polynomial which is the derivative of the polynomial.
-# """
-# function derivative(p::Polynomial)::Polynomial 
-#     der_p = Polynomial()
-#     for term in p
-#         der_term = derivative(term)
-#         !iszero(der_term) && push!(der_p,der_term)
-#     end
-#     return trim!(der_p)
-# end
+-(p::PolynomialSparse) = PolynomialSparse(-collect(p.terms))
+
+#-(p::PolynomialSparse) = PolynomialSparse(map((pt)->-pt, p.terms), map((pt)->-pt, values(l.dict)))
+
+
+
+"""
+Create a new polynomial which is the derivative of the polynomial.
+"""
+function derivative(p::PolynomialSparse)::PolynomialSparse
+    der_p = PolynomialSparse(Term(0,0)) # zero polynomialsparse, has list and dict
+    delete_element!(der_p.terms, der_p.dict, 0)
+    for term in p.terms# will go from lowest to highest
+        der_term = derivative(term)
+        iszero(der_term) ? nothing : insert_sorted!(der_p.terms, der_p.dict, der_term.degree, der_term)
+        # # if constant, derivative will be zero term and will have two terms of zero degree that conflict. will only potentially need to worry about this for first term, lowest
+        # # delete the original zero term in der_p. can't have empty polynomial sparse, so insert something else as placeholder first THEN insert the new constant term
+        #     delete_element!(der_p.terms, der_p.dict, 0)
+        #     insert_sorted!(der_p.terms, der_p.dict, 0, der_term)
+        #     delete_element!(der_p.terms, der_p.dict, 0)
+        # # account for when constants derive into zero - insert_sorted doesnt like having this zero term, since der_p is initialised to only have the zero term
+        # else
+        #     insert_sorted!(der_p.terms, der_p.dict, der_term.degree, der_term)
+        # end
+        #use insert_sorted to add the key and value of the derived termdto the list and dict of der_p
+    end
+    return der_p
+end
 
 # """
 # The prim part (multiply a polynomial by the inverse of its content).
 # """
-# prim_part(p::Polynomial) = p ÷ content(p)
+# prim_part(p::PolynomialSparse) = p ÷ content(p)
 
 
 # """
@@ -275,10 +292,10 @@ iszero(p::PolynomialSparse)::Bool = p.terms == [Term(0,0)]
 # # Queries about two polynomials #
 # #################################
 
-# """
-# Check if two polynomials are the same
-# """
-# ==(p1::Polynomial, p2::Polynomial)::Bool = p1.terms == p2.terms
+"""
+Check if two polynomials are the same
+"""
+==(p1::PolynomialSparse, p2::PolynomialSparse)::Bool = p1.terms == p2.terms
 
 
 # """

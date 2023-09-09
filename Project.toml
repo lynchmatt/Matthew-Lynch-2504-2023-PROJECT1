@@ -2,7 +2,6 @@
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-Subscripts = "2b7f82d5-8785-4f63-971e-f18ddbeb808e"
 
 [compat]
 julia = "1.9"

@@ -26,6 +26,8 @@ struct Term  #structs are immutable by default
     end
 end
 
+# if coefficient is zero, automatically makes the term into Term(0,0)
+
 """
 Creates the zero term.
 """
@@ -57,6 +59,7 @@ Show a term.
 function show(io::IO, t::Term)
     #define the coefficient and degree parts separately, then combine into one with io
     #term(1,0)
+    # IF ZERO POLY PRINT 
         #first determine if constant
         coefficient, xdegree = 0,0
         if t.degree == 0
@@ -70,7 +73,7 @@ function show(io::IO, t::Term)
                 coefficient = t.coeff
             end
         elseif t.degree == 1 #non-constant scenario, degree is one. still need to remove coefficients if one
-            xdegree = ""
+            xdegree = "x"
             if t.coeff == -1 
                 coefficient = "-"
             elseif t.coeff == 1
@@ -79,7 +82,7 @@ function show(io::IO, t::Term)
                 coefficient = t.coeff
             end
         else # nonconstant scenario, degree is not one or zero. still need to remove coefficients if one
-            xdegree = "$(super(string(t.degree)))"
+            xdegree = "x$(super(string(t.degree)))"
             if t.coeff == -1 
                 coefficient = "-"
             elseif t.coeff == 1
@@ -88,83 +91,9 @@ function show(io::IO, t::Term)
                 coefficient = t.coeff
             end
         end 
-        print(io, "$(coefficient)x$xdegree")
+        print(io, "$(coefficient)$xdegree")
     end
 
-    #first determine if constant
-#     coefficient, xdegree = 0,0
-#     if t.degree == 0
-#         xdegree = "" # removes the x^0
-#         # now checking if coefficient is one. if so, print +1 or -1
-#         if t.coeff == -1 
-#             coefficient = "-1"
-#         elseif t.coeff == 1
-#             coefficient = "1"
-#         else
-#             coefficient = t.coeff
-#         end
-#     elseif t.degree == 1 #non-constant scenario, degree is one. still need to remove coefficients if one
-#         xdegree = "x"
-#         if t.coeff == -1 
-#             coefficient = "-"
-#         elseif t.coeff == 1
-#             coefficient = ""
-#         else
-#             coefficient = t.coeff
-#         end
-#     else # nonconstant scenario, degree is not one or zero. still need to remove coefficients if one
-#         xdegree = "x^$(t.degree)"
-#         if t.coeff == -1 
-#             coefficient = "-"
-#         elseif t.coeff == 1
-#             coefficient = ""
-#         else
-#             coefficient = t.coeff
-#         end
-#     end 
-#     print(io, "$coefficient$xdegree")
-# end
-
-
-function show2(io::IO, t::Term)
-    #define the coefficient and degree parts separately, then combine into one with io
-    #term(1,0)
-        #first determine if constant
-        coefficient, xdegree = 0,0
-        if t.degree == 0
-            xdegree = "" # removes the x^0
-            # now checking if coefficient is one. if so, print +1 or -1 when it's the constant term
-            if t.coeff == -1 
-                coefficient = "-1"
-            elseif t.coeff == 1
-                coefficient = "1"
-            else
-                coefficient = t.coeff
-            end
-        elseif t.degree == 1 #non-constant scenario, degree is one. still need to remove coefficients if one
-            xdegree = ""
-            if t.coeff == -1 
-                coefficient = "-"
-            elseif t.coeff == 1
-                coefficient = ""
-            else
-                coefficient = t.coeff
-            end
-        else # nonconstant scenario, degree is not one or zero. still need to remove coefficients if one
-            xdegree = "$(super(string(t.degree)))"
-            if t.coeff == -1 
-                coefficient = "-"
-            elseif t.coeff == 1
-                coefficient = ""
-            else
-                coefficient = t.coeff
-            end
-        end 
-        print(io, "$(coefficient)x$xdegree")
-    end
-
-
-    #####################################
 
 
 """
@@ -172,7 +101,6 @@ Check if a term is 0.
 """
 iszero(t::Term)::Bool = iszero(t.coeff)
 
-iszero(Term(0,0))
 
 """
 Compare two terms.
@@ -215,7 +143,7 @@ Multiply two terms.
 """
 Compute the symmetric mod of a term with an integer.
 """
-mod(t::Term, p::Int) = Term(mod(t.coeff,p), t.degree)
+mod(t::Term, p::Int) = Term(mod(t.coeff,p), t.degree) # take term and what we're taking as mod. then do the coeffecient mod p, and keep the degree.
 
 """
 Compute the derivative of a term.
