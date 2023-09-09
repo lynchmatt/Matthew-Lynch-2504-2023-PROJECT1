@@ -7,7 +7,59 @@ include("poly_factorization_project.jl")
 
 ##### SPARSE TESTING #####
 
-l = PolynomialSparse([Term(9,2), Term(2,4), Term(-3, 3), Term(4,0)])
+
+x = x_polysparse()
+
+y1 = x^2 + 3x
+
+y1 == a
+
+t = Term(2,3)
+
+a = PolynomialSparse([Term(6,4), Term(6,9)])
+
+a^2
+
+p1 = PolynomialSparse([Term(4,6), Term(8,3)])
+
+p1*a
+
+
+    # der_p = PolynomialSparse(Term(0,0)) # zero polynomialsparse, has list and dict
+    # delete_element!(der_p.terms, der_p.dict, 0)
+    # for term in p.terms# will go from lowest to highest
+    #     der_term = derivative(term)
+    #     iszero(der_term) ? nothing : insert_sorted!(der_p.terms, der_p.dict, der_term.degree, der_term)
+    # end
+    # return der_p
+
+# emptypoly = PolynomialSparse(Term(0,0))
+# delete_element!(emptypoly.terms, emptypoly.dict, 0)
+# for vt in n.terms
+#     a = vt*t
+#     iszero(a) ? nothing : insert_sorted!(emptypoly.terms, emptypoly.dict, a.degree, a)
+# end
+
+emptypoly
+
+PolynomialSparse(init)
+
+m.terms.*t
+
+k = PolynomialSparse()
+iszero(k)
+delete_element!(k.terms, k.dict, 0)
+
+
+
+
+
+
+
+
+
+
+
 p = derivative(l) # THIS FUCKING WORKS
 
 j = PolynomialSparse([Term(9,2), Term(2,4)])
@@ -45,14 +97,10 @@ p.terms
 -collect(l.terms)
 
 
-example = PolynomialSparse([Term(2,4), Term(6,5), Term(8,3), Term(2,0)])
--(p::PolynomialSparse) = PolynomialSparse(map((pt)->-pt, p.terms), map((pt)->-pt, values(p.dict)))
--example
-
-values(l.dict)
-
 
 ### SORTING OUT VALUE ACCESS ###
+
+
 for t in l.terms
     println(-t)
 end
@@ -77,7 +125,8 @@ content(i)
 
 
 p = Polynomial([Term(3,4), Term(4,5), Term(2,3)])
-p.terms
+func = p ÷ 4
+func(5)
 iterate(p, 1)
 leading(p)
 derivative(p)

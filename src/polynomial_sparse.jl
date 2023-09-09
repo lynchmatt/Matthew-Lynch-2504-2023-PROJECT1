@@ -258,23 +258,11 @@ The negative of a polynomial.
 Create a new polynomial which is the derivative of the polynomial.
 """
 function derivative(p::PolynomialSparse)::PolynomialSparse
-    der_p = PolynomialSparse(Term(0,0)) # zero polynomialsparse, has list and dict
-    delete_element!(der_p.terms, der_p.dict, 0)
-    for term in p.terms# will go from lowest to highest
-        der_term = derivative(term)
-        iszero(der_term) ? nothing : insert_sorted!(der_p.terms, der_p.dict, der_term.degree, der_term)
-        # # if constant, derivative will be zero term and will have two terms of zero degree that conflict. will only potentially need to worry about this for first term, lowest
-        # # delete the original zero term in der_p. can't have empty polynomial sparse, so insert something else as placeholder first THEN insert the new constant term
-        #     delete_element!(der_p.terms, der_p.dict, 0)
-        #     insert_sorted!(der_p.terms, der_p.dict, 0, der_term)
-        #     delete_element!(der_p.terms, der_p.dict, 0)
-        # # account for when constants derive into zero - insert_sorted doesnt like having this zero term, since der_p is initialised to only have the zero term
-        # else
-        #     insert_sorted!(der_p.terms, der_p.dict, der_term.degree, der_term)
-        # end
-        #use insert_sorted to add the key and value of the derived termdto the list and dict of der_p
+    deriv_vector = Vector{Term}(undef, length(p.terms))
+    for (i,t) in enumerate(p.terms)
+        deriv_vector[i] = derivative(t)
     end
-    return der_p
+    return PolynomialSparse(deriv_vector)
 end
 
 # """
@@ -298,40 +286,50 @@ Check if two polynomials are the same
 ==(p1::PolynomialSparse, p2::PolynomialSparse)::Bool = p1.terms == p2.terms
 
 
-# """
-# Check if a polynomial is equal to 0.
-# """
-# #Note that in principle there is a problem here. E.g The polynomial 3 will return true to equalling the integer 2.
-# ==(p::Polynomial, n::T) where T <: Real = iszero(p) == iszero(n)
+"""
+Check if a polynomial is equal to 0.
+"""
+#Note that in principle there is a problem here. E.g The polynomial 3 will return true to equalling the integer 2.
+==(p::PolynomialSparse, n::T) where T <: Real = iszero(p) == iszero(n)
 
 # ##################################################################
 # # Operations with two objects where at least one is a polynomial #
 # ##################################################################
 
-# """
-# Subtraction of two polynomials.
-# """
-# -(p1::Polynomial, p2::Polynomial)::Polynomial = p1 + (-p2)
+"""
+Subtraction of two polynomials.
+"""
+-(p1::PolynomialSparse, p2::PolynomialSparse)::PolynomialSparse = p1 + (-p2)
 
 
-# """
-# Multiplication of polynomial and term.
-# """
-# *(t::Term, p1::Polynomial)::Polynomial = iszero(t) ? Polynomial() : Polynomial(map((pt)->t*pt, p1.terms))
-# *(p1::Polynomial, t::Term)::Polynomial = t*p1
+"""
+Multiplication of polynomial and term.
+"""
+function *(t::Term, p1::PolynomialSparse)::PolynomialSparse  # = iszero(t) ? PolynomialSparse() : Polynomial(map((pt)->t*pt, p1.terms))
+    outpoly = PolynomialSparse(Term(0,0))
+    delete_element!(outpoly.terms, outpoly.dict, 0)
+    for term in p1.terms
+        product = term*t
+        iszero(product) ? nothing : insert_sorted!(outpoly.terms, outpoly.dict, product.degree, product)
+    end
+    outpoly
+end
 
-# """
-# Multiplication of polynomial and an integer.
-# """
-# *(n::Int, p::Polynomial)::Polynomial = p*Term(n,0)
-# *(p::Polynomial, n::Int)::Polynomial = n*p
+*(p1::PolynomialSparse, t::Term)::PolynomialSparse = t*p1
+
+"""
+Multiplication of polynomial and an integer.
+"""
+*(n::Int, p::PolynomialSparse)::PolynomialSparse = p*Term(n,0)
+*(p::PolynomialSparse, n::Int)::PolynomialSparse = n*p
 
 # """
 # Integer division of a polynomial by an integer.
 
 # Warning this may not make sense if n does not divide all the coefficients of p.
 # """
-# ÷(p::Polynomial, n::Int) = (prime)->Polynomial(map((pt)->((pt ÷ n)(prime)), p.terms))
+# ÷(p::PolynomialSparse, n::Int) = (prime)->PolynomialSparse(map((pt)->((pt ÷ n)(prime)), p.terms))
+
 
 # """
 # Take the mod of a polynomial with an integer.
