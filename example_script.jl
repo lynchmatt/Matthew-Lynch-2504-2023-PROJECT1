@@ -3,7 +3,7 @@ Pkg.activate(".")
 
 include("poly_factorization_project.jl")
 
-x = x_poly()
+x = x_polydense()
 p1 = 2x^3 + 4x^2 - 3x
 p2 = 2x^4 - 4x^2 - 3x + 3
 
@@ -22,7 +22,7 @@ println("Here is the factorization: ", factorization)
 pr = mod(expand_factorization(factorization),prime)
 println("Reconstructing: ", pr)
 
-x = x_poly()
+x = x_polydense()
 p1 = 2x^2+3x +(-5) #Note we need +(-5)... try later without... how to fix?
 p2 = -3x^2 - 4x +6
 p1+p2

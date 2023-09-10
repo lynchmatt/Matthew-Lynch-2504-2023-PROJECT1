@@ -9,10 +9,10 @@
 """
 The extended euclid algorithm for polynomials modulo prime.
 """
-function extended_euclid_alg(a::Polynomial, b::Polynomial, prime::Int)
+function extended_euclid_alg(a::PolynomialDense, b::PolynomialDense, prime::Int)
     old_r, r = mod(a, prime), mod(b, prime)
-    old_s, s = one(Polynomial), zero(Polynomial)
-    old_t, t = zero(Polynomial), one(Polynomial)
+    old_s, s = one(PolynomialDense), zero(PolynomialDense)
+    old_t, t = zero(PolynomialDense), one(PolynomialDense)
 
     while !iszero(mod(r,prime))
         q = first(divide(old_r, r)(prime))
@@ -54,7 +54,7 @@ end
 """
 The GCD of two polynomials modulo prime.
 """
-gcd(a::Polynomial, b::Polynomial, prime::Int) = extended_euclid_alg(a,b,prime) |> first
+gcd(a::PolynomialDense, b::PolynomialDense, prime::Int) = extended_euclid_alg(a,b,prime) |> first
 
 """
 The GCD of two polynomialsparses modulo prime.

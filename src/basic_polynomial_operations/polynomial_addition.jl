@@ -7,9 +7,9 @@
 #############################################################################
 
 """
-Add a polynomial and a term.
+Add a polynomialdense and a term.
 """
-function +(p::Polynomial, t::Term)
+function +(p::PolynomialDense, t::Term)
     p = deepcopy(p)
     if t.degree > degree(p)
         push!(p, t)
@@ -23,7 +23,7 @@ function +(p::Polynomial, t::Term)
 
     return trim!(p)
 end
-+(t::Term, p::Polynomial) = p + t
++(t::Term, p::PolynomialDense) = p + t
 
 
 """
@@ -66,7 +66,7 @@ end
 """
 Add two polynomials.
 """
-function +(p1::Polynomial, p2::Polynomial)::Polynomial
+function +(p1::PolynomialDense, p2::PolynomialDense)::PolynomialDense
     p = deepcopy(p1)
     for t in p2.terms
         p += t
@@ -77,8 +77,8 @@ end
 """
 Add a polynomial and an integer.
 """
-+(p::Polynomial, n::Int) = p + Term(n,0)
-+(n::Int, p::Polynomial) = p + Term(n,0)
++(p::PolynomialDense, n::Int) = p + Term(n,0)
++(n::Int, p::PolynomialDense) = p + Term(n,0)
 
 +(p::PolynomialSparse, n::Int) = p + Term(n,0)
 +(n::Int, p::PolynomialSparse) = p + Term(n,0)

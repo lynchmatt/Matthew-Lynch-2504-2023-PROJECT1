@@ -5,7 +5,7 @@ include("poly_factorization_project.jl")
 
 println("First we create a polynomial x, with coefficient 1 and power 1.")
 
-x = x_poly()
+x = x_polysparse()
 
 println("This polynomial can then be manipulated to create other polynomials: ")
 
@@ -19,8 +19,8 @@ println(poly3)
 
 println("We can also create specific types of polynomials, like cyclotonic polynomials or linear monic polynomials, using only integer input")
 
-cyclo = cyclotonic_polynomial(3)
-monic = linear_monic_polynomial(4)
+cyclo = cyclotonic_polynomialsparse(3)
+monic = linear_monic_polynomialsparse(4)
 
 println(cyclo)
 println(monic)

@@ -19,9 +19,9 @@ test_euclid_ints()
 test_ext_euclid_ints()
 
 ####
-# Execute unit tests for polynomials
+# Execute unit tests for polynomialdense
 ####
-include("polynomials_test.jl")
+include("polynomialdense_test.jl")
 prod_test_poly()
 prod_derivative_test_poly()
 ext_euclid_test_poly()

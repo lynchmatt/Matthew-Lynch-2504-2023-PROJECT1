@@ -18,8 +18,8 @@ a = ÷(s, gcd(s,derivative(s),2))
 a(2)
 
 
-a = Polynomial([Term(1,3), Term(8,7)])
-b = Polynomial([Term(2,1), Term(1,2)])
+a = PolynomialDense([Term(1,3), Term(8,7)])
+b = PolynomialDense([Term(2,1), Term(1,2)])
 square_free(a, 1)
 extended_euclid_alg(a, b, 3)
 gcd(a,b, 3)
@@ -92,10 +92,16 @@ content(i)
 
 ##### DENSE TESTING #####
 
-e = Polynomial()
+e = PolynomialDense()
+x = x_polydense()
+z = x^2 + 2x
 e.terms
 
-p = Polynomial([Term(3,4), Term(4,5), Term(2,3)])
+p = PolynomialDense([Term(3,4), Term(4,5), Term(2,3)])
+r = PolynomialDense([Term(4,7), Term(9,1)])
+p + r
+r*p
+(r ÷ p)(5)
 e + p
 
 func = p ÷ 4
