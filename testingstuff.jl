@@ -6,6 +6,29 @@ Pkg.activate(".")
 include("poly_factorization_project.jl")
 
 ##### SPARSE TESTING #####
+s = PolynomialSparse([Term(1,3), Term(8,7)])
+q = PolynomialSparse([Term(2,1), Term(1,2)])
+t = extended_euclid_alg(s,q,3)
+typeof(t[2])
+square_free(s, 2)
+
+square_free(p::PolynomialSparse, prime::Int)::PolynomialSparse = (÷(p, gcd(p,derivative(p),prime)))(prime)
+
+a = ÷(s, gcd(s,derivative(s),2))
+a(2)
+
+
+a = Polynomial([Term(1,3), Term(8,7)])
+b = Polynomial([Term(2,1), Term(1,2)])
+square_free(a, 1)
+extended_euclid_alg(a, b, 3)
+gcd(a,b, 3)
+# returns the greatest common denominator, which can be expressed as a linear combination of a and b - the coordinates of the linear combo are the other numbers
+# ie returns
+÷(s,2)
+
+empty = PolynomialSparse(zero(Term))
+delete_element!(empty.terms, empty.dict, 0)
 
 
 x = x_polysparse()
@@ -25,38 +48,13 @@ p1 = PolynomialSparse([Term(4,6), Term(8,3)])
 p1*a
 
 
-    # der_p = PolynomialSparse(Term(0,0)) # zero polynomialsparse, has list and dict
-    # delete_element!(der_p.terms, der_p.dict, 0)
-    # for term in p.terms# will go from lowest to highest
-    #     der_term = derivative(term)
-    #     iszero(der_term) ? nothing : insert_sorted!(der_p.terms, der_p.dict, der_term.degree, der_term)
-    # end
-    # return der_p
-
-# emptypoly = PolynomialSparse(Term(0,0))
-# delete_element!(emptypoly.terms, emptypoly.dict, 0)
-# for vt in n.terms
-#     a = vt*t
-#     iszero(a) ? nothing : insert_sorted!(emptypoly.terms, emptypoly.dict, a.degree, a)
-# end
-
-emptypoly
-
-PolynomialSparse(init)
-
-m.terms.*t
-
 k = PolynomialSparse()
 iszero(k)
 delete_element!(k.terms, k.dict, 0)
 
-
-
-
-
-
-
-
+j = PolynomialSparse(Term(0,0))
+iszero(j)
+delete_element!(j.terms, j.dict, 0)
 
 
 
@@ -66,35 +64,6 @@ j = PolynomialSparse([Term(9,2), Term(2,4)])
 delete_element!(j.terms, j.dict, 4)
 j
 j.terms
-
-der_p = PolynomialSparse(Term(0,0)) # zero polynomialsparse, has list and dict
-delete_element!(der_p.terms, der_p.dict, 0)
-
-
-haskey(l.dict, 0)
-derivative(l)
-# if haskey zero to begin with, delete the first term at the very end, since they'll be a double-up?
-insert_sorted!(l.terms, l.dict, 0, Term(9,0))
-l.terms
-derivative(l)
-# will auto-convert Term(0,Int) to be the zero term, so it's now a constant and a constant already exists
-a = Term(0,2)
-a.degre
-leading(l)
-coeffs(l)
-degree(l)
-content(l)
-evaluate(l, 0)
-iszero(l)
-trim!(l)
-p = derivative(l)
-p.terms
-trim!(p)
-iszero(p.terms[1])
-
-p.terms
-
--collect(l.terms)
 
 
 
@@ -123,8 +92,12 @@ content(i)
 
 ##### DENSE TESTING #####
 
+e = Polynomial()
+e.terms
 
 p = Polynomial([Term(3,4), Term(4,5), Term(2,3)])
+e + p
+
 func = p ÷ 4
 func(5)
 iterate(p, 1)
@@ -172,15 +145,5 @@ function alphabetprinter()
     for (i,t) in (localvar ? enumerate(reverse(alphabet)) : enumerate(alphabet)) 
         println(t)
     end
-end
-
-
-function +(p1::PolynomialSparse, p2::PolynomialSparse)::PolynomialSparse
-    a = deepcopy(p1)
-    b = deepcopy(p2)
-    for (i,t) in enumerate(a.dict)
-        println(t[1])
-    end
-
 end
 

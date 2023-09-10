@@ -51,9 +51,8 @@ function trim!(p::PolynomialSparse)::PolynomialSparse
     i = length(p.terms)
     while i > 0
         if iszero(p.terms[i])
-            println("zero found")
-            @show a = first(p.terms)
-            @show a.degree
+            a = first(p.terms)
+            a.degree
             delete_element!(p.terms, p.dict, a.degree)
         else
             nothing
@@ -250,10 +249,6 @@ The negative of a polynomial.
 
 -(p::PolynomialSparse) = PolynomialSparse(-collect(p.terms))
 
-#-(p::PolynomialSparse) = PolynomialSparse(map((pt)->-pt, p.terms), map((pt)->-pt, values(l.dict)))
-
-
-
 """
 Create a new polynomial which is the derivative of the polynomial.
 """
@@ -265,16 +260,16 @@ function derivative(p::PolynomialSparse)::PolynomialSparse
     return PolynomialSparse(deriv_vector)
 end
 
-# """
-# The prim part (multiply a polynomial by the inverse of its content).
-# """
-# prim_part(p::PolynomialSparse) = p ÷ content(p)
+"""
+The prim part (multiply a polynomial by the inverse of its content).
+"""
+prim_part(p::PolynomialSparse) = p ÷ content(p)
 
 
-# """
-# A square free polynomial.
-# """
-# square_free(p::Polynomial, prime::Int)::Polynomial = (p ÷ gcd(p,derivative(p),prime))(prime)
+"""
+A square free polynomial.
+"""
+square_free(p::PolynomialSparse, prime::Int)::PolynomialSparse = (÷(p, gcd(p,derivative(p),prime)))(prime)
 
 # #################################
 # # Queries about two polynomials #
@@ -297,13 +292,13 @@ Check if a polynomial is equal to 0.
 # ##################################################################
 
 """
-Subtraction of two polynomials.
+Subtraction of two polynomialsparses.
 """
 -(p1::PolynomialSparse, p2::PolynomialSparse)::PolynomialSparse = p1 + (-p2)
 
 
 """
-Multiplication of polynomial and term.
+Multiplication of polynomialsparse and term.
 """
 function *(t::Term, p1::PolynomialSparse)::PolynomialSparse  # = iszero(t) ? PolynomialSparse() : Polynomial(map((pt)->t*pt, p1.terms))
     outpoly = PolynomialSparse(Term(0,0))
@@ -318,47 +313,39 @@ end
 *(p1::PolynomialSparse, t::Term)::PolynomialSparse = t*p1
 
 """
-Multiplication of polynomial and an integer.
+Multiplication of polynomialsparse and an integer.
 """
 *(n::Int, p::PolynomialSparse)::PolynomialSparse = p*Term(n,0)
 *(p::PolynomialSparse, n::Int)::PolynomialSparse = n*p
 
-# """
-# Integer division of a polynomial by an integer.
+"""
+Integer division of a polynomial by an integer.
 
-# Warning this may not make sense if n does not divide all the coefficients of p.
-# """
-# ÷(p::PolynomialSparse, n::Int) = (prime)->PolynomialSparse(map((pt)->((pt ÷ n)(prime)), p.terms))
+Warning this may not make sense if n does not divide all the coefficients of p.
+"""
+÷(p::PolynomialSparse, n::Int) = (prime)->PolynomialSparse(map((pt)->((pt ÷ n)(prime)), collect(s.terms)))
 
 
-# """
-# Take the mod of a polynomial with an integer.
-# """
-# function mod(f::Polynomial, p::Int)::Polynomial
-#     f_out = deepcopy(f)
-#     for i in 1:length(f_out.terms)
-#         f_out.terms[i] = mod(f_out.terms[i], p)
-#     end
-#     return trim!(f_out)
-        
-#     # p_out = Polynomial()
-#     # for t in f
-#     #     new_term = mod(t, p)
-#     #     @show new_term
-#     #     push!(p_out, new_term)
-#     # end
-#     # return p_out
-# end
+"""
+Take the mod of a polynomialsparse with an integer.
+"""
+function mod(f::PolynomialSparse, p::Int)::PolynomialSparse
+    mod_vector = Vector{Term}(undef, length(f.terms))
+    for (i,t) in enumerate(f.terms)
+        mod_vector[i] = mod(t, p)
+    end
+    return PolynomialSparse(mod_vector)
+end
 
-# """
-# Power of a polynomial mod prime.
-# """
-# function pow_mod(p::Polynomial, n::Int, prime::Int)
-#     n < 0 && error("No negative power")
-#     out = one(p)
-#     for _ in 1:n
-#         out *= p
-#         out = mod(out, prime)
-#     end
-#     return out
-# end
+"""
+Power of a polynomialsparse mod prime.
+"""
+function pow_mod(p::PolynomialSparse, n::Int, prime::Int)
+    n < 0 && error("No negative power")
+    out = one(p) # unit polynomial
+    for _ in 1:n # up the value of integer n
+        out *= p # multiply 
+        out = mod(out, prime)
+    end
+    return out
+end

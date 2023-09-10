@@ -14,20 +14,12 @@ using DataStructures, Random
 # Base.iterate(l::MutableLinkedList) = l.len == 0 ? nothing : (l.node.next.data, l.node.next.next)
 # Base.iterate(l::MutableLinkedList, n::ListNode) = n === l.node ? nothing : (n.data, n.next)
 
-# """
-# Makes the linked list iterable. 
-# """
-# function iterate(lst::MutableLinkedList{T}, state=lst.node.next) where T
-#     state == lst.node.prev ? nothing : (lst.node.data, lst.node.next)
-# end
-
-
-# """
-# Makes the linked list iterable. 
-# """
-# function iterate(lst::MutableLinkedList{T}, state=lst.node.next) where T <: Term
-#     state == lst.node.prev ? nothing : (lst.node.data, lst.node.next)
-# end
+"""
+Makes the linked list iterable. 
+"""
+function iterate(lst::MutableLinkedList{T}, state=lst.node.next) where T
+    state == lst.node.prev ? nothing : (lst.node.data, lst.node.next)
+end
 
 
 

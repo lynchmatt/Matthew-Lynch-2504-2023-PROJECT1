@@ -56,8 +56,8 @@ Add two polynomialsparses.
 function +(p1::PolynomialSparse, p2::PolynomialSparse)::PolynomialSparse
     a = deepcopy(p1)
     for t in p2.terms
-        @show t
-        @show a += t
+        t
+        a += t
     end
     return a
 end

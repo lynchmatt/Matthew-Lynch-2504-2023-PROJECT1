@@ -28,6 +28,15 @@ ext_euclid_test_poly()
 division_test_poly()
 
 ####
+# Execute unit tests for polynomialsparse
+####
+include("polynomialsparse_test.jl")
+prod_test_polysparse()
+prod_derivative_test_polysparse()
+ext_euclid_test_polysparse()
+division_test_polysparse()
+
+####
 # Execute unit tests for polynomial factorization
 ####
 include("factorization_test.jl")
