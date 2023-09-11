@@ -5,22 +5,59 @@ Pkg.activate(".")
 
 include("poly_factorization_project.jl")
 
-##### SPARSE TESTING #####
-s = PolynomialSparse([Term(1,3), Term(8,7)])
+##### TESTING #####
+
+
+s = PolynomialSparse([Term(1,8), Term(2,4)])
 q = PolynomialSparse([Term(2,1), Term(1,2)])
-t = extended_euclid_alg(s,q,3)
-typeof(t[2])
-square_free(s, 2)
 
-square_free(p::PolynomialSparse, prime::Int)::PolynomialSparse = (÷(p, gcd(p,derivative(p),prime)))(prime)
+d = PolynomialDense([Term(2,8), Term(2,4)])
+e = PolynomialDense([Term(2,2), Term(1,4)])
 
-a = ÷(s, gcd(s,derivative(s),2))
-a(2)
+
+mod(1,3)
+
+x = x_polysparse()
+
+x + 2 + 4
+
+mod(1 - (2x+2)*0, 3)
+a = (4 + 2x)
+typeof(a)
++(a::PolynomialSparse,2::Int)
+
+g,s,t = 1, 0, x + 1
+a, b = 2x^2 + x, 4x + 1
+
+mod((s*a + t*b) - g, 3)
+
+
+
+
+d = PolynomialDense([Term(1,1), Term(2,2)])
+e = PolynomialDense([Term(2,0), Term(1,1)])
+square_free(d,3)
+multiplicity(d,e,2)
+square_free(d,5)
+
+function multiplicity(f::PolynomialSparse, g::PolynomialSparse, prime::Int)::Int
+    degree(gcd(f, g, prime)) == 0 && return 0
+    return 1 + multiplicity((÷(f,g)(prime)), g, prime)
+end
+
+# issue is with the assertion error in gcd - refuses to acknowledge that it's zero. Think the cause is how i've defined the zero polynomialsparse. 
+# gcd works for polysparse if i remove the assertion error.
+# all of square free will work if i remove the assertion error - need to fix the zero thing probably
+
+gcd(a,derivative(a),3)
+
+square_sparse(s,2)
+square_free(a,3)
 
 
 a = PolynomialDense([Term(1,3), Term(8,7)])
 b = PolynomialDense([Term(2,1), Term(1,2)])
-square_free(a, 1)
+square_free(a, 3)
 extended_euclid_alg(a, b, 3)
 gcd(a,b, 3)
 # returns the greatest common denominator, which can be expressed as a linear combination of a and b - the coordinates of the linear combo are the other numbers
@@ -66,28 +103,11 @@ j
 j.terms
 
 
-
 ### SORTING OUT VALUE ACCESS ###
-
 
 for t in l.terms
     println(-t)
 end
-
-map((pt)->(-pt), values(l.dict))
-
-j = map((pt)->-pt, values(l.dict))
-k = get_element(l.terms, l.dict, 3) 
-k.degree
-
-i = PolynomialSparse()
-i.dict
-i.terms
-i.terms == MutableLinkedList{Term}(zero(Term))
-iszero(i)
-evaluate(i, 2)
-degree(i)
-content(i)
 
 
 ##### DENSE TESTING #####
@@ -99,21 +119,6 @@ e.terms
 
 p = PolynomialDense([Term(3,4), Term(4,5), Term(2,3)])
 r = PolynomialDense([Term(4,7), Term(9,1)])
-p + r
-r*p
-(r ÷ p)(5)
-e + p
-
-func = p ÷ 4
-func(5)
-iterate(p, 1)
-leading(p)
-derivative(p)
-
-
-for t in l.terms # ITERATE IN POLYNOMIALSPARSE.JL WORKS
-    println(t)
-end
 
 
 q = MutableLinkedList{Int}(1,2,3)
@@ -123,17 +128,9 @@ end
 
 sum(q)
 
-l.terms[2] # access specific term in polynomial l
-
-l.terms[2].coeff # access the coefficeint of a specific term of polynomial l1
-
-l.dict[3] # access the term of degree 3 of polynomial l
-l.dict[0]
 
 a = get_element(l.terms, l.dict, 3)
 a.degree # access the term of degree 3 of polynomial 1, but nicer
-
-k = PolynomialSparse(Term(2,3)) # single, non-vector term works
 
 
 

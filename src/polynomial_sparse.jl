@@ -17,12 +17,13 @@ A PolynomialSparse type - designed to be for polynomials with integer coefficien
 
 struct PolynomialSparse
 
-    terms::MutableLinkedList{Term} 
+    terms::MutableLinkedList{Term{Int128}} 
     dict::Dict{Int, DataStructures.ListNode{Term}} 
 
     #Inner constructor of the 0 polynomial
     PolynomialSparse() = new(MutableLinkedList{Term}(zero(Term)), Dict{Int, DataStructures.ListNode{Term}}(0=>DataStructures.ListNode{Term}(zero(Term))))
-    
+    #PolynomialSparse() = new(MutableLinkedList{Term}(), Dict{Int, DataStructures.ListNode{Term}}())
+
 
     #Inner constructor of polynomial based on arbitrary list of terms
     function PolynomialSparse(terms::Vector{Term})
@@ -237,7 +238,7 @@ Push a new term into the polynomial.
 """
 Check if the polynomial is zero.
 """
-iszero(p::PolynomialSparse)::Bool = p.terms == MutableLinkedList{Term}(zero(Term))
+iszero(p::PolynomialSparse)::Bool = (p.terms == MutableLinkedList{Term}(zero(Term))) || (p.terms == MutableLinkedList{Term}()) 
 
 # #################################################################
 # # Transformation of the polynomial to create another polynomial #
@@ -271,6 +272,7 @@ A square free polynomial.
 """
 square_free(p::PolynomialSparse, prime::Int)::PolynomialSparse = (÷(p, gcd(p,derivative(p),prime)))(prime)
 
+
 # #################################
 # # Queries about two polynomials #
 # #################################
@@ -282,9 +284,9 @@ Check if two polynomials are the same
 
 
 """
-Check if a polynomial is equal to 0.
+Check if a polynomial is equal to 0. 
 """
-#Note that in principle there is a problem here. E.g The polynomial 3 will return true to equalling the integer 2.
+#Note that in principle there is a problem here. E.g The polynomial 3 will return true to equalling the integer 2. HERE HERE
 ==(p::PolynomialSparse, n::T) where T <: Real = iszero(p) == iszero(n)
 
 # ##################################################################

@@ -26,6 +26,8 @@ function factor_test_polydense(;N::Int = 10, seed::Int = 0, primes::Vector{Int} 
     println("\nfactor_test_polydense - PASSED")
 end
 
+factor_test_polydense()
+
 """
 Test factorization of polynomialsparses
 """

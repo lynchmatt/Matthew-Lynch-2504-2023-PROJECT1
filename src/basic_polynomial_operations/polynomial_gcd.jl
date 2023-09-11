@@ -21,7 +21,6 @@ function extended_euclid_alg(a::PolynomialDense, b::PolynomialDense, prime::Int)
         old_t, t = t, mod(old_t - q*t, prime)
     end
     g, s, t = old_r, old_s, old_t
-
     @assert mod(s*a + t*b - g, prime) == 0
     return g, s, t 
 end
@@ -34,8 +33,8 @@ function extended_euclid_alg(a::PolynomialSparse, b::PolynomialSparse, prime::In
     empty = PolynomialSparse(zero(Term))
     delete_element!(empty.terms, empty.dict, 0)
     old_r, r = mod(a, prime), mod(b, prime)
-    old_s, s = one(PolynomialSparse), zero(PolynomialSparse)
-    old_t, t = zero(PolynomialSparse), one(PolynomialSparse)
+    old_s, s = one(PolynomialSparse), empty
+    old_t, t = empty, one(PolynomialSparse)
 
     while !iszero(mod(r,prime))
         q = first(divide(old_r, r)(prime))
@@ -44,7 +43,6 @@ function extended_euclid_alg(a::PolynomialSparse, b::PolynomialSparse, prime::In
         old_t, t = t, mod(old_t - q*t, prime)
     end
     g, s, t = old_r, old_s, old_t
-
     @assert mod(s*a + t*b - g, prime) == 0
     return g, s, t  
 end
