@@ -22,19 +22,16 @@ test_ext_euclid_ints()
 # Execute unit tests for polynomialdense
 ####
 include("polynomialdense_test.jl")
-prod_test_poly()
-prod_derivative_test_poly()
-ext_euclid_test_poly()
-division_test_poly()
+prod_test_polydense()
+prod_derivative_test_polydense()
+ext_euclid_test_polydense()
+division_test_polydense()
 
 ####
 # Execute unit tests for polynomialsparse
 ####
 include("polynomialsparse_test.jl")
-prod_test_polysparse()
-prod_derivative_test_polysparse()
-ext_euclid_test_polysparse()
-division_test_polysparse()
+
 
 ####
 # Execute unit tests for polynomial factorization

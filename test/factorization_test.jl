@@ -1,14 +1,14 @@
-#############################################################################
-#############################################################################
+####################################################################################
+####################################################################################
 #
-# This file contains units tests for polynomial factorization
+# This file contains units tests for polynomial factorization, both sparse and dense
 #                                                                               
-#############################################################################
-#############################################################################
+####################################################################################
+####################################################################################
 
 
 """
-Test factorization of polynomialsdense
+Test factorization of polynomialdense
 """
 function factor_test_polydense(;N::Int = 10, seed::Int = 0, primes::Vector{Int} = [5,17,19])
     Random.seed!(seed)
@@ -26,7 +26,6 @@ function factor_test_polydense(;N::Int = 10, seed::Int = 0, primes::Vector{Int} 
     println("\nfactor_test_polydense - PASSED")
 end
 
-factor_test_polydense()
 
 """
 Test factorization of polynomialsparses
@@ -44,5 +43,5 @@ function factor_test_polysparse(;N::Int = 10, seed::Int = 0, primes::Vector{Int}
         end
     end
 
-    println("\nfactor_test_poly - PASSED")
+    println("\nfactor_test_polysparse - PASSED")
 end

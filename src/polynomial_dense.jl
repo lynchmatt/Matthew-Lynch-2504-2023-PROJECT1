@@ -146,7 +146,6 @@ function show(io::IO, p::PolynomialDense)
                 else # if not first term, print plus or minus
                     print(io, t.coeff < 0 ? " - $(string(t)[2:end])" : " + $(string(t)[1:end])")
                 end
-                # print the term. if next term's coefficient is negative, print minus, if not print plus.
             end
         end
     end
