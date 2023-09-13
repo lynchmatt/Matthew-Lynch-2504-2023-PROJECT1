@@ -80,7 +80,7 @@ end
 """
 Power of a polynomialsparse128.
 """
-function ^(p::PolynomialSparse128, n::Int128)
+function ^(p::PolynomialSparse128, n::Integer)
     n < 0 && error("No negative power")
     out = one(p)
     for _ in 1:n

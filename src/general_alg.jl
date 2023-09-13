@@ -53,7 +53,7 @@ pretty_print_egcd((a,b),(g,s,t)) = println("$a × $s + $b × $t = $g") #\times +
 """
 Integer inverse symmetric mod
 """
-function int_inverse_mod(a::Int, m::Int)::Int 
+function int_inverse_mod(a::T, m::Q)::T where {T,Q}
     if mod(a, m) == 0
         error("Can't find inverse of $a mod $m because $m divides $a") 
     end

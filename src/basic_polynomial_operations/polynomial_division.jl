@@ -76,7 +76,7 @@ f = q*g + r
 p is a prime
 """
 function divide(num::PolynomialSparse128, den::PolynomialSparse128)
-    function division_function(p::Int128)
+    function division_function(p::Integer)
         f, g = mod(num,p), mod(den,p) # numerator mod p and denominator mod p
         degree(f) < degree(num) && return nothing 
         iszero(g) && throw(DivideError())
@@ -111,6 +111,11 @@ The quotient from polynomialsparse division. Returns a function of an integer.
 """
 ÷(num::PolynomialSparse, den::PolynomialSparse)  = (p::Int) -> first(divide(num,den)(p))
 
+"""
+The quotient from polynomialsparse division. Returns a function of an integer.
+"""
+÷(num::PolynomialSparse128, den::PolynomialSparse128)  = (p::Integer) -> first(divide(num,den)(p))
+
 ##############
 # REMAINDER  #
 ##############
@@ -124,3 +129,8 @@ rem(num::PolynomialDense, den::PolynomialDense)  = (p::Int) -> last(divide(num,d
 The remainder from polynomialsparse division. Returns a function of an integer.
 """
 rem(num::PolynomialSparse, den::PolynomialSparse)  = (p::Int) -> last(divide(num,den)(p))
+
+"""
+The remainder from polynomialsparse128 division. Returns a function of an integer.
+"""
+rem(num::PolynomialSparse128, den::PolynomialSparse128)  = (p::Integer) -> last(divide(num,den)(p))

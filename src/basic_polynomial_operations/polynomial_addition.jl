@@ -138,8 +138,8 @@ Add a polynomialsparse and an integer.
 """
 Add a polynomialsparse128 and an integer.
 """
-+(p::PolynomialSparse128, n::Int128) = p + Term128(n,0)
-+(n::Int128, p::PolynomialSparse128) = p + Term128(n,0)
++(p::PolynomialSparse128, n::Integer) = p + Term128(n,0)
++(n::Integer, p::PolynomialSparse128) = p + Term128(n,0)
 
 ##################
 # POLY MINUS INT #
@@ -161,5 +161,5 @@ Subtraction of an integer from a polynomialsparse
 """
 Subtraction of an integer from a polynomialsparse128
 """
--(p1::PolynomialSparse128, n::Int128)::PolynomialSparse128 = p1 + -n
--(n::Int128, p1::PolynomialSparse128)::PolynomialSparse128 = -p1 + n
+-(p1::PolynomialSparse128, n::Integer)::PolynomialSparse128 = p1 + -n
+-(n::Integer, p1::PolynomialSparse128)::PolynomialSparse128 = -p1 + n

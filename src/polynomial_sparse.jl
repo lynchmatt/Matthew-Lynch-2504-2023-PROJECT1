@@ -7,7 +7,7 @@
 #############################################################################
 
 ####################################
-# Polynomial type and construction #
+# Polynomialsparse type and construction #
 ####################################
 using DataStructures
 

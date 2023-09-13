@@ -54,7 +54,7 @@ end
 """
 The extended euclid algorithm for polynomialdense modulo prime.
 """
-function extended_euclid_alg(a::PolynomialSparse128, b::PolynomialSparse128, prime::Int128)
+function extended_euclid_alg(a::PolynomialSparse128, b::PolynomialSparse128, prime::Integer)
     empty = PolynomialSparse128(zero(Term128))
     delete_element!(empty.terms, empty.dict, 0)
     old_r, r = mod(a, prime), mod(b, prime)
@@ -89,4 +89,4 @@ gcd(a::PolynomialSparse, b::PolynomialSparse, prime::Int) = extended_euclid_alg(
 """
 The GCD of two polynomialsparses modulo prime.
 """
-gcd(a::PolynomialSparse128, b::PolynomialSparse128, prime::Int128) = extended_euclid_alg(a,b,prime) |> first
+gcd(a::PolynomialSparse128, b::PolynomialSparse128, prime::Integer) = extended_euclid_alg(a,b,prime) |> first

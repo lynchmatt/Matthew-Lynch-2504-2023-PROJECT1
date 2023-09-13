@@ -18,10 +18,10 @@ A PolynomialSparse128 type - designed to be for polynomials with larger integer 
 struct PolynomialSparse128
 
     terms::MutableLinkedList{Term128} 
-    dict::Dict{Int, DataStructures.ListNode{Term128}} 
+    dict::Dict{Integer, DataStructures.ListNode{Term128}} 
 
     #Inner constructor of the 0 polynomial
-    PolynomialSparse128() = new(MutableLinkedList{Term128}(zero(Term128)), Dict{Int, DataStructures.ListNode{Term128}}(0=>DataStructures.ListNode{Term128}(zero(Term128))))
+    PolynomialSparse128() = new(MutableLinkedList{Term128}(zero(Term128)), Dict{Integer, DataStructures.ListNode{Term128}}(0=>DataStructures.ListNode{Term128}(zero(Term128))))
 
     #Inner constructor of polynomial based on arbitrary list of terms
     function PolynomialSparse128(terms::Vector{Term128})
@@ -70,13 +70,13 @@ PolynomialSparse128(t::Term128) = PolynomialSparse128([t])
 """
 Construct a polynomial of the form x^p-x.
 """
-cyclotonic_polynomialsparse128(p::Int) = PolynomialSparse128([Term128(1,p), Term128(-1,1)])
+cyclotonic_polynomialsparse128(p::Integer) = PolynomialSparse128([Term128(1,p), Term128(-1,1)])
 
 
 """
 Construct a polynomial of the form x-n.
 """
-linear_monic_polynomialsparse128(n::Int) = PolynomialSparse128([Term128(1,1), Term128(-n,0)])
+linear_monic_polynomialsparse128(n::Integer) = PolynomialSparse128([Term128(1,1), Term128(-n,0)])
 
 """
 Construct a polynomial of the form x.
@@ -98,9 +98,9 @@ one(p::PolynomialSparse128) = one(typeof(p))
 Generates a random polynomial.
 """
 function rand(::Type{PolynomialSparse128} ; 
-                degree::Int = -1, 
-                terms::Int = -1, 
-                max_coeff::Int = 100, 
+                degree::Integer = -1, 
+                terms::Integer = -1, 
+                max_coeff::Integer = 100, 
                 mean_degree::Float64 = 5.0,
                 prob_term::Float64  = 0.7,
                 monic = false,
@@ -180,17 +180,17 @@ leading(p::PolynomialSparse128)::Term128 = isempty(p.terms) ? zero(Term128) : ma
 """
 Returns a vector of the coefficients of the polynomial.
 """
-coeffs(p::PolynomialSparse128)::Vector{Int} = [t.coeff for t in p.terms]
+coeffs(p::PolynomialSparse128)::Vector{Integer} = [t.coeff for t in p.terms]
 
 """
 The degree of the polynomial.
 """
-degree(p::PolynomialSparse128)::Int = leading(p).degree
+degree(p::PolynomialSparse128)::Integer = leading(p).degree
 
 """
 The content of the polynomial is the GCD of its coefficients.
 """
-content(p::PolynomialSparse128)::Int = euclid_alg(coeffs(p))
+content(p::PolynomialSparse128)::Integer = euclid_alg(coeffs(p))
 
 """
 Evaluate the polynomial at a point `x`.
@@ -267,7 +267,7 @@ prim_part(p::PolynomialSparse128) = ÷(p, content(p))
 """
 A square free polynomial.
 """
-square_free(p::PolynomialSparse128, prime::Int)::PolynomialSparse128 = (÷(p, gcd(p,derivative(p),prime)))(prime)
+square_free(p::PolynomialSparse128, prime::Integer)::PolynomialSparse128 = (÷(p, gcd(p,derivative(p),prime)))(prime)
 
 
 # #################################
@@ -314,21 +314,21 @@ end
 """
 Multiplication of PolynomialSparse128 and an integer.
 """
-*(n::Int, p::PolynomialSparse128)::PolynomialSparse128 = p*Term128(n,0)
-*(p::PolynomialSparse128, n::Int)::PolynomialSparse128 = n*p
+*(n::Integer, p::PolynomialSparse128)::PolynomialSparse128 = p*Term128(n,0)
+*(p::PolynomialSparse128, n::Integer)::PolynomialSparse128 = n*p
 
 """
 Integer division of a polynomial by an integer.
 
 Warning this may not make sense if n does not divide all the coefficients of p.
 """
-÷(p::PolynomialSparse128, n::Int) = (prime)->PolynomialSparse128(map((pt)->((pt ÷ n)(prime)), collect(p.terms)))
+÷(p::PolynomialSparse128, n::Integer) = (prime)->PolynomialSparse128(map((pt)->((pt ÷ n)(prime)), collect(p.terms)))
 
 
 """
 Take the mod of a PolynomialSparse128 with an integer.
 """
-function mod(f::PolynomialSparse128, p::Int)::PolynomialSparse128
+function mod(f::PolynomialSparse128, p::Integer)::PolynomialSparse128
     mod_vector = Vector{Term128}(undef, length(f.terms))
     for (i,t) in enumerate(f.terms)
         mod_vector[i] = mod(t, p)
@@ -339,7 +339,7 @@ end
 """
 Power of a PolynomialSparse128 mod prime.
 """
-function pow_mod(p::PolynomialSparse128, n::Int, prime::Int)
+function pow_mod(p::PolynomialSparse128, n::Integer, prime::Integer)
     n < 0 && error("No negative power")
     out = one(p) # unit polynomial
     for _ in 1:n # up the value of integer n

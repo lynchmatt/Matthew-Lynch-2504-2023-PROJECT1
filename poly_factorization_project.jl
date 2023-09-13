@@ -14,9 +14,12 @@ import Base: +, -, *, mod, %, ÷, ==, ^, rand, rem, zero, one
 
 include("src/general_alg.jl")
 include("src/term.jl")
+include("src/term128.jl")
 include("src/sorted_linked_list.jl")
 include("src/polynomial_dense.jl")
 include("src/polynomial_sparse.jl")
+include("src/polynomial_sparse_128.jl")
+include("src/polynomialmodp.jl")
     include("src/basic_polynomial_operations/polynomial_addition.jl")
     include("src/basic_polynomial_operations/polynomial_multiplication.jl")
     include("src/basic_polynomial_operations/polynomial_division.jl")

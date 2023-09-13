@@ -20,7 +20,8 @@ A Term128.
 struct Term128  #structs are immutable by default
     coeff::Int128
     degree::Int
-    function Term128(coeff::Int128, degree::Int)
+    function Term128(coeff::Integer, degree::Integer)
+        coeff = Int128(coeff)
         degree < 0 && error("Degree must be non-negative")
         coeff != 0 ? new(coeff,degree) : new(coeff,0)
     end
@@ -31,12 +32,12 @@ end
 """
 Creates the zero Term128.
 """
-zero(::Type{Term128})::Term128 = Term128(0,0)
+zero(::Type{Term128})::Term128 = Term128(Int128(0),Int128(0))
 
 """
 Creates the unit Term128.
 """
-one(::Type{Term128})::Term128 = Term128(1,0)
+one(::Type{Term128})::Term128 = Term128(Int128(1),Int128(0))
 
 ###########
 # Display #
@@ -112,22 +113,22 @@ Evaluate a Term128 at a point x.
 """
 evaluate(t::Term128, x::T) where T <: Number = t.coeff * x^t.degree
 
-##########################
+#############################
 # Operations with a Term128 #
-##########################
+#############################
 
 """
 Add two Term128s of the same degree.
 """
 function +(t1::Term128,t2::Term128)::Term128
     @assert t1.degree == t2.degree
-    Term128(t1.coeff + t2.coeff, t1.degree)
+    Term128(Int128(t1.coeff + t2.coeff), t1.degree)
 end
 
 """
 Negate a Term128.
 """
--(t::Term128,) = Term128(-t.coeff,t.degree)  
+-(t::Term128,) = Term128(Int128(-t.coeff),Int128(t.degree))  
 
 """
 Subtract two Term128s with the same degree.
@@ -137,28 +138,27 @@ Subtract two Term128s with the same degree.
 """
 Multiply two Term128s.
 """
-*(t1::Term128, t2::Term128)::Term128 = Term128(t1.coeff * t2.coeff, t1.degree + t2.degree)
-
+*(t1::Term128, t2::Term128)::Term128 = Term128(Int128(t1.coeff * t2.coeff), Int128(t1.degree + t2.degree))
 
 """
 Compute the symmetric mod of a Term128 with an integer.
 """
-mod(t::Term128, p::Int) = Term128(mod(t.coeff,p), t.degree) # take term and what we're taking as mod. then do the coeffecient mod p, and keep the degree.
+mod(t::Term128, p::Integer) = Term128(Int128(mod(t.coeff,p)), Int128(t.degree)) # take term and what we're taking as mod. then do the coeffecient mod p, and keep the degree.
 
 """
 Compute the derivative of a Term128.
 """
-derivative(t::Term128) = Term128(t.coeff*t.degree,max(t.degree-1,0))
+derivative(t::Term128) = Term128(Int128(t.coeff*t.degree),Int128(max(t.degree-1,0)))
 
 """
 Divide two Term128s. Returns a function of an integer.
 """
 function ÷(t1::Term128,t2::Term128) #\div + [TAB]
     @assert t1.degree ≥ t2.degree
-    f(p::Int)::Term128 = Term128(mod((t1.coeff * int_inverse_mod(t2.coeff, p)), p), t1.degree - t2.degree)
+    f(p::Integer)::Term128 = Term128(Int128(mod((t1.coeff * int_inverse_mod(t2.coeff, p)), p)), Int128(t1.degree - t2.degree))
 end
 
 """
 Integer divide a Term128 by an integer.
 """
-÷(t::Term128, n::Int) = t ÷ Term128(n,0)
+÷(t::Term128, n::Integer) = t ÷ Term128(Int128(n),Int128(0))
