@@ -93,7 +93,7 @@ end
 
 
 """ 
-Test excess zeroes are not stored in sparse polynomials
+Test excess zeroes are not stored in sparse polynomials where there are many terms with the zero coefficient
 """
 function test_excess_zeros()
     p1 = PolynomialSparse([Term(1,2), Term(2,3), Term(2,300)])

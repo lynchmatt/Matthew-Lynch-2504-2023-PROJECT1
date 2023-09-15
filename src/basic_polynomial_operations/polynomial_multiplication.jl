@@ -49,6 +49,14 @@ function *(p1::PolynomialSparse128, p2::PolynomialSparse128)::PolynomialSparse12
     return p_out
 end
 
+"""
+Multiply two polynomialmodps, provided they are mod the same prime
+"""
+function *(p1::PolynomialModP, p2::PolynomialModP)::PolynomialModP
+    @assert p1.prime == p2.prime
+    return PolynomialModP((p1.polynomial*p2.polynomial), p1.prime)
+end
+
 #########
 # POWER #
 #########
@@ -87,4 +95,11 @@ function ^(p::PolynomialSparse128, n::Integer)
         out *= p
     end
     return out
+end
+
+"""
+Power of a polynomialmodp
+"""
+function ^(p::PolynomialModP, n::Int)
+    return PolynomialModP((p.polynomial^n), p.prime)
 end

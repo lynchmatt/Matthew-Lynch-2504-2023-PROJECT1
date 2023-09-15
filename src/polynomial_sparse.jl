@@ -68,9 +68,9 @@ Construct a polynomial with a single term.
 PolynomialSparse(t::Term) = PolynomialSparse([t])
 
 """
-Construct a polynomial of the form x^p-x.
+Construct a polynomial of the form x^n-x.
 """
-cyclotonic_polynomialsparse(p::Int) = PolynomialSparse([Term(1,p), Term(-1,1)])
+cyclotonic_polynomialsparse(n::Int) = PolynomialSparse([Term(1,n), Term(-1,1)])
 
 
 """

@@ -72,6 +72,16 @@ function extended_euclid_alg(a::PolynomialSparse128, b::PolynomialSparse128, pri
     return g, s, t  
 end
 
+
+"""
+The extended euclid algorithm for polynomialmodp, where prime is built into both a and b.
+"""
+function extended_euclid_alg(a::PolynomialModP, b::PolynomialModP)
+    @assert a.prime == b.prime
+    prime = a.prime
+    return extended_euclid_alg(a.polynomial, b.polynomial, prime)
+end
+
 #######
 # GCD #
 #######
@@ -90,3 +100,8 @@ gcd(a::PolynomialSparse, b::PolynomialSparse, prime::Int) = extended_euclid_alg(
 The GCD of two polynomialsparses modulo prime.
 """
 gcd(a::PolynomialSparse128, b::PolynomialSparse128, prime::Integer) = extended_euclid_alg(a,b,prime) |> first
+
+"""
+The GCD of two polynomialmodps
+"""
+gcd(a::PolynomialModP, b::PolynomialModP) = extended_euclid_alg(a,b) |> first

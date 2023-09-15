@@ -68,9 +68,9 @@ Construct a polynomial with a single term.
 PolynomialSparse128(t::Term128) = PolynomialSparse128([t])
 
 """
-Construct a polynomial of the form x^p-x.
+Construct a polynomial of the form x^n-x.
 """
-cyclotonic_polynomialsparse128(p::Integer) = PolynomialSparse128([Term128(1,p), Term128(-1,1)])
+cyclotonic_polynomialsparse128(n::Integer) = PolynomialSparse128([Term128(1,n), Term128(-1,1)])
 
 
 """

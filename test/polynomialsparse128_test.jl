@@ -107,9 +107,9 @@ end
 Test that adding the zero term does not change the length of the polynomialsparse128
 """
 function test_zero_addition_128()
-    @show p1 = rand(PolynomialSparse128)
-    @show p1plus = p1 + Term128(0,0)
-    @show @assert length(p1plus) == length(p1)
+    p1 = rand(PolynomialSparse128)
+    p1plus = p1 + Term128(0,0)
+    @assert length(p1plus) == length(p1)
     println("test_zero_addition_128 - PASSED")
 end
 

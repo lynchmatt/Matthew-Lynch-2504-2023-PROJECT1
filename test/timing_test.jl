@@ -16,4 +16,4 @@ println("Time the multiplication of the Int64 PolynomialSparses $a64 and $b64")
 a128 = PolynomialSparse128([Term128(9223372036854775807, 2), Term128(9223372036854775807, 3)])
 b128 = PolynomialSparse128([Term128(9223372036854775807, 2), Term128(9223372036854775807, 1)])
 println("Time the multiplication of the Int128 PolynomialSparses $a128 and $b128")
-c = @time a128*b12
+c = @time a128*b128

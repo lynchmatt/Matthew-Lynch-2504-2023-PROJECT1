@@ -6,67 +6,82 @@ Pkg.activate(".")
 include("poly_factorization_project.jl")
 
 ##### TESTING #####
-
-f = Term128(9,4)
-g = Term128(3,2)
-s1 = PolynomialSparse128([Term128(4,3), Term128(2,9), Term128(3,4)])
-s2 = PolynomialSparse128([Term128(7,3), Term128(2,2), Term128(8,1)])
+f = Term(11,4)
+g = Term(3,2)
+s1 = PolynomialSparse([Term(5,3), Term(2,9), Term(3,4)])
+s2 = PolynomialSparse([Term(7,3), Term(2,2), Term(8,1)])
+s3  = PolynomialSparse([Term(3,2), Term(9,1), Term(3,0)])
 d1 = PolynomialDense([Term(4,3), Term(2,9), Term(3,4)])
-d2 = PolynomialDense([Term(7,3), Term(2,2), Term(8,1)])
-easy = PolynomialDense([Term(3,2), Term(2,1), Term(3,0)])
+
+factor(s1,5)
+factor(s1modp)
+x = x_polysparse()
+
+square_free(s2,5)
+square_free(s2modp)
 
 
-sparse = PolynomialSparse([Term(100,2), Term(100,1), Term(100,0)])
-sparse128 = PolynomialSparse128([Term128(100,2), Term128(100,1), Term128(100,0)])
+s1modp = PolynomialModP(s1,5)
+s2modp = PolynomialModP(s2, 5)
+s3modp = PolynomialModP(s3,11)
+divide(s2modp, s1modp)
+rem(s2modp, s1modp)
+÷(s2modp, s1modp)
+divide(s2modp, s3modp)
+rem(s2modp, s3modp)
 
-iszero(mod(sparse128, 10))
-iszero(mod(sparse128^10, 10))
+check = 2x^9 + 2x^3
+mod(check^2,3)
+s1modp^2
+pow_mod(s1modp,2)
 
-function overflow_test()
-    sparsepoly = PolynomialSparse([Term(100,2), Term(100,1), Term(100,0)])
-    sparsepoly128 = PolynomialSparse128([Term128(100,2), Term128(100,1), Term128(100,0)])
-    # the coefficients of both should be a multiple of 10, when raised to any power. check if they are equal
-    if sparsepoly^10 == sparsepoly128^10
-        println("No overflow in PolynomialSparse")
-        return
-    end
-    # check that the coefficients of the polynomialsparse128 are in fact multiples of ten, when raised to the tenth power
-    if iszero(mod(sparsepoly128^10, 10))
-    else
-        throw(OverflowError("PolynomialSparse128 has overflown"))
-    end
-    # check if polynomialsparse has overflown
-    if iszero(mod(sparsepoly^10, 10))
-        println("PolynomialSparse has not overflown.")
-    else
-        println("PolynomialSparse has overflown.")
-    end
-end
+4 - s1modp
 
-
-maxpolysparse = PolynomialSparse([Term(92233720368547758071,1)])
-maxpolysparse += Term128(1,1)
-
-overflow_test()
-
-overflow = sparse^10
-typeof(overflow)
-
-dontoverflow = sparse128^10
+length(s1)
+length(modp)
+length(s2)
+length(s2modp)
+leading(s1modp)
+leading(s2modp)
+coeffs(s1modp)
+coeffs(s2modp)
+degree(s1)
+degree(s1modp)
+degree(s2modp)
+evaluate(s1, 2)
+evaluate(s2modp,2)
+evaluate(check,2)
 
 
+s1modp == s1modp2
 
-@show p1 = rand(PolynomialSparse128)
-length(p1)
-@show p1plus = p1 + Term128(0,0)
+iszero(s2modp)
 
-p1plus = p1 + Term128(0,0)
-length(p1)
+
+m = PolynomialModP(s1, 3)
+z = zero(PolynomialModP,3)
+iszero(z)
+a = one(PolynomialModP, 3)
+one(m)
+a.polynomial
+m.polynomial
+zero(PolynomialModP,3)
+rand(Polynomial)
+
+cyclotonic_polynomialmodp(2,3)
+
+linear_monic_polynomialmodp(3,5)
+
+x = x_polymodp(3)
+
+mod(s1,3)
 
 ### SORTING OUT VALUE ACCESS ###
 
-for t in l.terms
-    println(-t)
+x = x_polymodp(3)
+k = x^2 + 3x + 4x^6
+for t in k.polynomial
+    println(t)
 end
 
 

@@ -34,6 +34,11 @@ end
 Add a polynomialsparse and a term.
 """
 function +(p::PolynomialSparse, t::Term)
+    if iszero(t) == true
+        return p
+    else
+        nothing
+    end
     p = deepcopy(p)
     checkelement = get_element(p.terms, p.dict, t.degree) # try get the element of the same degree as the term we're adding
     if isnothing(checkelement) # if doesnt have a term of that degree
@@ -59,6 +64,11 @@ end
 Add a polynomialsparse128 and a term.
 """
 function +(p::PolynomialSparse128, t::Term128)
+    if iszero(t) == true
+        return p
+    else
+        nothing
+    end
     p = deepcopy(p)
     checkelement = get_element(p.terms, p.dict, t.degree) # try get the element of the same degree as the term we're adding
     if isnothing(checkelement) # if doesnt have a term of that degree
@@ -78,6 +88,12 @@ function +(p::PolynomialSparse128, t::Term128)
 end
 
 +(t::Term128, p::PolynomialSparse128) = p + t
+
+"""
+Methods for adding terms to PolynomialModP
+"""
++(p::PolynomialModP, t::Term) = PolynomialModP((p.polynomial+mod(t,p.prime)), p.prime)
++(t::Term, p::PolynomialModP) = p + t
 
 ##################
 # POLY PLUS POLY #
@@ -119,6 +135,14 @@ function +(p1::PolynomialSparse128, p2::PolynomialSparse128)::PolynomialSparse12
     return a
 end
 
+"""
+Add two polynomialmodps, provided they are mod the same prime
+"""
+function +(p1::PolynomialModP, p2::PolynomialModP)::PolynomialModP
+    @assert p1.prime == p2.prime
+    return PolynomialModP((p1.polynomial+p2.polynomial), p1.prime)
+end
+
 
 ##################
 # POLY PLUS INT  #
@@ -140,6 +164,12 @@ Add a polynomialsparse128 and an integer.
 """
 +(p::PolynomialSparse128, n::Integer) = p + Term128(n,0)
 +(n::Integer, p::PolynomialSparse128) = p + Term128(n,0)
+
+"""
+Add a polynomialmodp and an integer.
+"""
++(p::PolynomialModP, n::Integer) = p + Term(n,0)
++(n::Integer, p::PolynomialModP) = p + Term(n,0)
 
 ##################
 # POLY MINUS INT #
@@ -163,3 +193,9 @@ Subtraction of an integer from a polynomialsparse128
 """
 -(p1::PolynomialSparse128, n::Integer)::PolynomialSparse128 = p1 + -n
 -(n::Integer, p1::PolynomialSparse128)::PolynomialSparse128 = -p1 + n
+
+"""
+Subtraction of an integer from a polynomialmodp
+"""
+-(p1::PolynomialModP, n::Integer)::PolynomialModP = p1 + -n
+-(n::Integer, p1::PolynomialModP)::PolynomialModP = -p1 + n

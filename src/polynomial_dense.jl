@@ -6,9 +6,9 @@
 #############################################################################
 #############################################################################
 
-####################################
+#########################################
 # PolynomialDense type and construction #
-####################################
+#########################################
 
 """
 A PolynomialDense type - designed to be for polynomials with integer coefficients stored as a vector of terms
@@ -69,9 +69,9 @@ Construct a polynomialDense with a single term.
 PolynomialDense(t::Term) = PolynomialDense([t])
 
 """
-Construct a polynomialdense of the form x^p-x.
+Construct a polynomialdense of the form x^n-x.
 """
-cyclotonic_polynomialdense(p::Int) = PolynomialDense([Term(1,p), Term(-1,1)])
+cyclotonic_polynomialdense(n::Int) = PolynomialDense([Term(1,n), Term(-1,1)])
 
 
 """
@@ -162,9 +162,9 @@ Allows to do iteration over the non-zero terms of the polynomialdense. This impl
 """
 iterate(p::PolynomialDense, state=1) = iterate(p.terms, state)
 
-##############################
+###################################
 # Queries about a polynomialdense #
-##############################
+###################################
 
 """
 The number of terms of the polynomialDense.

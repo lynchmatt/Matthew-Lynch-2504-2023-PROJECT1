@@ -96,6 +96,15 @@ function divide(num::PolynomialSparse128, den::PolynomialSparse128)
     return division_function
 end
 
+"""
+Division algorithm for polynomialmodp, provided the numerator and denominator are mod the same prime.
+Uses the inbuilt prime in polynomialmodp, so it does not return a function
+"""
+function divide(num::PolynomialModP, den::PolynomialModP)
+    @assert num.prime == den.prime
+    return divide(num.polynomial, den.polynomial)(num.prime)
+end
+
 #############
 # QUOTIENT  #
 #############
@@ -104,7 +113,6 @@ end
 The quotient from polynomial division. Returns a function of an integer.
 """
 ÷(num::PolynomialDense, den::PolynomialDense)  = (p::Int) -> first(divide(num,den)(p))
-
 
 """
 The quotient from polynomialsparse division. Returns a function of an integer.
@@ -115,6 +123,14 @@ The quotient from polynomialsparse division. Returns a function of an integer.
 The quotient from polynomialsparse division. Returns a function of an integer.
 """
 ÷(num::PolynomialSparse128, den::PolynomialSparse128)  = (p::Integer) -> first(divide(num,den)(p))
+
+"""
+The quotient from polynomialmodp division, modulo the same prime. Doesn't return a function, as prime is built in.
+"""
+function ÷(num::PolynomialModP, den::PolynomialModP)
+    @assert num.prime == den.prime
+    return ÷(num.polynomial, den.polynomial)(num.prime)
+end
 
 ##############
 # REMAINDER  #
@@ -134,3 +150,11 @@ rem(num::PolynomialSparse, den::PolynomialSparse)  = (p::Int) -> last(divide(num
 The remainder from polynomialsparse128 division. Returns a function of an integer.
 """
 rem(num::PolynomialSparse128, den::PolynomialSparse128)  = (p::Integer) -> last(divide(num,den)(p))
+
+"""
+The remainder from polynomialmodp division, with the function of the prime built in. Works only when denominator and numerator are both mod the same prime.
+"""
+function rem(num::PolynomialModP, den::PolynomialModP)
+    @assert num.prime == den.prime
+    return rem(num.polynomial, den.polynomial)(num.prime)
+end

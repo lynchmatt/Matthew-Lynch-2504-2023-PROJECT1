@@ -90,3 +90,8 @@ function ext_euclid_test_polydense(;prime::Int=101, N::Int = 10^3, seed::Int = 0
     end
     println("ext_euclid_test_polydense - PASSED")
 end
+
+prod_test_polydense()
+prod_derivative_test_polydense()
+ext_euclid_test_polydense()
+division_test_polydense()
