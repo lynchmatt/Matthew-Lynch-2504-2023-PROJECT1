@@ -6,75 +6,85 @@ Pkg.activate(".")
 include("poly_factorization_project.jl")
 
 ##### TESTING #####
-f = Term(11,4)
-g = Term(3,2)
-s1 = PolynomialSparse([Term(5,3), Term(2,9), Term(3,4)])
-s2 = PolynomialSparse([Term(7,3), Term(2,2), Term(8,1)])
+s1 = PolynomialSparse([Term(3,1), Term(4,0)])
+s2 = PolynomialSparse([Term(6,1), Term(5,0)])
 s3  = PolynomialSparse([Term(3,2), Term(9,1), Term(3,0)])
 d1 = PolynomialDense([Term(4,3), Term(2,9), Term(3,4)])
-
-factor(s1,5)
-factor(s1modp)
-x = x_polysparse()
-
-square_free(s2,5)
-square_free(s2modp)
-
-
 s1modp = PolynomialModP(s1,5)
 s2modp = PolynomialModP(s2, 5)
 s3modp = PolynomialModP(s3,11)
-divide(s2modp, s1modp)
-rem(s2modp, s1modp)
-÷(s2modp, s1modp)
-divide(s2modp, s3modp)
-rem(s2modp, s3modp)
 
-check = 2x^9 + 2x^3
-mod(check^2,3)
-s1modp^2
-pow_mod(s1modp,2)
+function CRT_B(a::PolynomialSparse, b::PolynomialSparse, n::Integer, m::Integer)::PolynomialSparse
+    x = x_polysparse()
+    c = PolynomialSparse()
+    while !isempty(a.terms) || !isempty(b.terms)
+        k = max(degree(a), degree(b))
+        if k > degree(a)
+            ak = 0
+        else
+            ak = leading(a).coeff
+            delete_element!(a.terms, a.dict, leading(a).degree)
+        end
+        if k > degree(b)
+            bk = 0
+        else
+            bk = leading(b).coeff
+            delete_element!(b.terms, b.dict, leading(b).degree)
+        end
+        @show ck = CRT_int([Int(ak), Int(bk)], [n, m])
+        c = c + ck*x^k
+    end
+    return c
+end
 
-4 - s1modp
+CRT_L(s1,s2,5,7)
+CRT_B(s1, s2, 5, 7)
 
-length(s1)
-length(modp)
-length(s2)
-length(s2modp)
-leading(s1modp)
-leading(s2modp)
-coeffs(s1modp)
-coeffs(s2modp)
-degree(s1)
-degree(s1modp)
-degree(s2modp)
-evaluate(s1, 2)
-evaluate(s2modp,2)
-evaluate(check,2)
+a = 1
+Bool(0)
+Int(trunc(log2(129)))
+
+maxpower = Int(trunc(log2(64)))
+binary = [2^i for i in 0:maxpower]
+binary_string = digits(2, base=2, pad=length(binary))
 
 
-s1modp == s1modp2
+function pow_mod(p::PolynomialModP, n::Int)
+    # find max binary power needed to reach exponent
+    maxpower = Int(trunc(log2(n)))
+    exponents = [2^i for i in 0:maxpower]
+    binary_string = digits(n, base=2, pad=maxpower) # convert to binary string
+    outpoly = one(Term)
+    for i in 1:length(exponents)
+        if binary_string[i] == 1
+            outpoly *= ^(p, exponents[i])
+        else
+            nothing
+        end
+    end
+    return outpoly
+end
 
-iszero(s2modp)
+
+function l_pow(p::PolynomialModP, n::Int)
+    max_power = floor(Int, log2(n))
+    powers::Vector{typeof(p)} = [p] #p^1, p^2, p^4, p^8, p^16, ...
+    for i in 1:max_power
+        powers = push!(powers, powers[end]*powers[end])
+    end
+    out = one(p)
+    for i in 0:max_power
+        if n & (1 << i) != 0 #if n has a 1 in the ith bit
+            out*=powers[i+1]
+        end
+    end
+    return out
+end
 
 
-m = PolynomialModP(s1, 3)
-z = zero(PolynomialModP,3)
-iszero(z)
-a = one(PolynomialModP, 3)
-one(m)
-a.polynomial
-m.polynomial
-zero(PolynomialModP,3)
-rand(Polynomial)
 
-cyclotonic_polynomialmodp(2,3)
-
-linear_monic_polynomialmodp(3,5)
-
-x = x_polymodp(3)
-
-mod(s1,3)
+l_pow(s1modp, 2)
+pow_mod_new(s1modp,2)
 
 ### SORTING OUT VALUE ACCESS ###
 

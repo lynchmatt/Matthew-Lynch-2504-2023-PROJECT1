@@ -69,7 +69,6 @@ rand(::Type{PolynomialModP}, p::Int)::PolynomialModP = PolynomialModP(rand(Polyn
 ###########
 # Display #
 ###########
-lowest_to_highest = false
 
 """
 Show a polynomial mod p
@@ -208,8 +207,20 @@ Warning this may not make sense if n does not divide all the coefficients of the
 
 
 """
-Power of a polynomialsparse mod prime.
+Power of a polynomialsparse mod prime using repeated squares (for Task 6).
 """
 function pow_mod(p::PolynomialModP, n::Int)
-    return p^n
+    # find max binary power needed to reach exponent
+    maxpower = Int(trunc(log2(n)))
+    exponents = [2^i for i in 0:maxpower]
+    binary_string = digits(n, base=2, pad=maxpower) # convert to binary string
+    outpoly = one(Term)
+    for i in 1:length(exponents)
+        if binary_string[i] == 1
+            outpoly *= ^(p, exponents[i])
+        else
+            nothing
+        end
+    end
+    return outpoly
 end

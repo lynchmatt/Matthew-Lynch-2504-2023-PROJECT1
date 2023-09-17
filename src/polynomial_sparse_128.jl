@@ -42,25 +42,6 @@ struct PolynomialSparse128
     end
 end
 
-"""
-This function maintains the invariant of the Polynomial type so that there are no zero terms beyond the highest
-non-zero term. 
-"""
-function trim!(p::PolynomialSparse128)::PolynomialSparse128
-    i = length(p.terms)
-    while i > 0
-        if iszero(p.terms[i])
-            a = first(p.terms)
-            a.degree
-            delete_element!(p.terms, p.dict, a.degree)
-        else
-            nothing
-        end
-        i = i-1
-    end
-    return p
-end
-
 
 """
 Construct a polynomial with a single term.
@@ -120,7 +101,6 @@ end
 # ###########
 # # Display #
 # ###########
-lowest_to_highest = false
 
 """
 Show a polynomial.
@@ -196,41 +176,6 @@ content(p::PolynomialSparse128)::Integer = euclid_alg(coeffs(p))
 Evaluate the polynomial at a point `x`.
 """
 evaluate(f::PolynomialSparse128, x::T) where T <: Number = sum(evaluate(t,x) for t in f.terms)
-
-# ################################
-# # Pushing and popping of terms #
-# ################################
-
-"""
-Push a new term into the polynomial.
-"""
-#Note that ideally this would throw an error if pushing another term of degree that is already in the polynomial
-# function push!(p::Polynomial, t::Term) 
-#     if t.degree <= degree(p)
-#         p.terms[t.degree + 1] = t
-#     else
-#         append!(p.terms, zeros(Term, t.degree - degree(p)-1))
-#         push!(p.terms, t)
-#     end
-#     return p        
-# end
-
-# """
-# Pop the leading term out of the polynomial. When polynomial is 0, keep popping out 0.
-# """
-# function pop!(p::Polynomial)::Term 
-#     popped_term = pop!(p.terms) #last element popped is leading coefficient
-
-#     while !isempty(p.terms) && iszero(last(p.terms))
-#         pop!(p.terms)
-#     end
-
-#     if isempty(p.terms)
-#         push!(p.terms, zero(Term))
-#     end
-
-#     return popped_term
-# end
 
 """
 Check if the polynomial is zero.
@@ -337,14 +282,20 @@ function mod(f::PolynomialSparse128, p::Integer)::PolynomialSparse128
 end
 
 """
-Power of a PolynomialSparse128 mod prime.
+Power of a PolynomialSparse128 mod prime, using repeatedsquares (for Task 6)
 """
-function pow_mod(p::PolynomialSparse128, n::Integer, prime::Integer)
-    n < 0 && error("No negative power")
-    out = one(p) # unit polynomial
-    for _ in 1:n # up the value of integer n
-        out *= p # multiply 
-        out = mod(out, prime)
+function pow_mod(p::PolynomialSparse128, n::Int)
+    # find max binary power needed to reach exponent
+    maxpower = Int(trunc(log2(n)))
+    exponents = [2^i for i in 0:maxpower]
+    binary_string = digits(n, base=2, pad=maxpower) # convert to binary string
+    outpoly = one(Term128)
+    for i in 1:length(exponents)
+        if binary_string[i] == 1
+            outpoly *= ^(p, exponents[i])
+        else
+            nothing
+        end
     end
-    return out
+    return outpoly
 end
