@@ -5,48 +5,96 @@ Pkg.activate(".")
 
 include("poly_factorization_project.jl")
 
+
+
 ##### TESTING #####
-s1 = PolynomialSparse([Term(3,1), Term(4,0)])
-s2 = PolynomialSparse([Term(6,1), Term(5,0)])
+s1 = PolynomialSparse128([Term128(3,2), Term128(4,0)])
+s2 = PolynomialSparse128([Term128(6,1), Term128(5,0)])
+s1*s2
+multiplication(s1,s2)
+
+
 s3  = PolynomialSparse([Term(3,2), Term(9,1), Term(3,0)])
 d1 = PolynomialDense([Term(4,3), Term(2,9), Term(3,4)])
 s1modp = PolynomialModP(s1,5)
-s2modp = PolynomialModP(s2, 5)
+s2modp = PolynomialModP(s2, 7)
 s3modp = PolynomialModP(s3,11)
 
-function CRT_B(a::PolynomialSparse, b::PolynomialSparse, n::Integer, m::Integer)::PolynomialSparse
+function CRT_poly(p1::PolynomialSparse, p2::PolynomialSparse, n::Integer, m::Integer)::PolynomialSparse
+    a = deepcopy(p1)
+    b = deepcopy(p2)
     x = x_polysparse()
-    c = PolynomialSparse()
-    while !isempty(a.terms) || !isempty(b.terms)
+    c = PolynomialSparse([Term(0,0)])
+    delete_element!(c.terms, c.dict, 0)
+    while !iszero(leading(a)) || !iszero(leading(b))
         k = max(degree(a), degree(b))
         if k > degree(a)
             ak = 0
         else
             ak = leading(a).coeff
-            delete_element!(a.terms, a.dict, leading(a).degree)
+            if iszero(leading(a))
+                nothing
+            else
+                @show leading(a).degree
+                delete_element!(a.terms, a.dict, leading(a).degree)
+            end
         end
         if k > degree(b)
             bk = 0
         else
             bk = leading(b).coeff
-            delete_element!(b.terms, b.dict, leading(b).degree)
+            if iszero(leading(b))
+                nothing
+            else
+                delete_element!(b.terms, b.dict, leading(b).degree)
+            end
         end
-        @show ck = CRT_int([Int(ak), Int(bk)], [n, m])
+        ck = CRT_int([Int(ak), Int(bk)], [n, m])
         c = c + ck*x^k
     end
     return c
 end
 
-CRT_L(s1,s2,5,7)
-CRT_B(s1, s2, 5, 7)
+CRT_poly(s1, s2, 5, 7)
 
-a = 1
-Bool(0)
-Int(trunc(log2(129)))
+function CRT_poly_mod(p1::PolynomialModP, p2::PolynomialModP)::PolynomialModP
+    a = deepcopy(p1).polynomial
+    b = deepcopy(p2).polynomial
+    n = p1.prime
+    m = p2.prime
+    x = x_polysparse()
+    c = PolynomialSparse([Term(0,0)])
+    delete_element!(c.terms, c.dict, 0)
+    while !iszero(leading(a)) || !iszero(leading(b))
+        k = max(degree(a), degree(b))
+        if k > degree(a)
+            ak = 0
+        else
+            ak = leading(a).coeff
+            if iszero(leading(a))
+                nothing
+            else
+                @show leading(a).degree
+                delete_element!(a.terms, a.dict, leading(a).degree)
+            end
+        end
+        if k > degree(b)
+            bk = 0
+        else
+            bk = leading(b).coeff
+            if iszero(leading(b))
+                nothing
+            else
+                delete_element!(b.terms, b.dict, leading(b).degree)
+            end
+        end
+        ck = CRT_int([Int(ak), Int(bk)], [n, m])
+        c = c + ck*x^k
+    end
+    return PolynomialModP(c, n*m)
+end
 
-maxpower = Int(trunc(log2(64)))
-binary = [2^i for i in 0:maxpower]
-binary_string = digits(2, base=2, pad=length(binary))
+CRT_poly_mod(s1modp, s2modp)
 
 
 function pow_mod(p::PolynomialModP, n::Int)

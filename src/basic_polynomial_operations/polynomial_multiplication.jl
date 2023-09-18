@@ -57,6 +57,14 @@ function *(p1::PolynomialModP, p2::PolynomialModP)::PolynomialModP
     return PolynomialModP((p1.polynomial*p2.polynomial), p1.prime)
 end
 
+"""
+Multiply two polynomialmodp128s, provided they are mod the same prime
+"""
+function *(p1::PolynomialModP128, p2::PolynomialModP128)::PolynomialModP128
+    @assert p1.prime == p2.prime
+    return PolynomialModP128((p1.polynomial*p2.polynomial), p1.prime)
+end
+
 #########
 # POWER #
 #########

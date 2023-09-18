@@ -95,6 +95,12 @@ Methods for adding terms to PolynomialModP
 +(p::PolynomialModP, t::Term) = PolynomialModP((p.polynomial+mod(t,p.prime)), p.prime)
 +(t::Term, p::PolynomialModP) = p + t
 
+"""
+Methods for adding terms to PolynomialModP128
+"""
++(p::PolynomialModP128, t::Term128) = PolynomialModP128((p.polynomial+mod(t,p.prime)), p.prime)
++(t::Term128, p::PolynomialModP128) = p + t
+
 ##################
 # POLY PLUS POLY #
 ##################
@@ -143,6 +149,14 @@ function +(p1::PolynomialModP, p2::PolynomialModP)::PolynomialModP
     return PolynomialModP((p1.polynomial+p2.polynomial), p1.prime)
 end
 
+"""
+Add two polynomialmodp128s, provided they are mod the same prime
+"""
+function +(p1::PolynomialModP128, p2::PolynomialModP128)::PolynomialModP128
+    @assert p1.prime == p2.prime
+    return PolynomialModP128((p1.polynomial+p2.polynomial), p1.prime)
+end
+
 
 ##################
 # POLY PLUS INT  #
@@ -170,6 +184,12 @@ Add a polynomialmodp and an integer.
 """
 +(p::PolynomialModP, n::Integer) = p + Term(n,0)
 +(n::Integer, p::PolynomialModP) = p + Term(n,0)
+
+"""
+Add a polynomialmodp128 and an integer.
+"""
++(p::PolynomialModP128, n::Integer) = p + Term128(n,0)
++(n::Integer, p::PolynomialModP128) = p + Term128(n,0)
 
 ##################
 # POLY MINUS INT #
@@ -199,3 +219,9 @@ Subtraction of an integer from a polynomialmodp
 """
 -(p1::PolynomialModP, n::Integer)::PolynomialModP = p1 + -n
 -(n::Integer, p1::PolynomialModP)::PolynomialModP = -p1 + n
+
+"""
+Subtraction of an integer from a polynomialmodp
+"""
+-(p1::PolynomialModP128, n::Integer)::PolynomialModP128 = p1 + -n
+-(n::Integer, p1::PolynomialModP128)::PolynomialModP128 = -p1 + n

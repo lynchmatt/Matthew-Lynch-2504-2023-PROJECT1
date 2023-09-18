@@ -12,7 +12,6 @@
 """
 PolynomialModP type - takes a PolynomialSparse and a prime as fields, and does operations mod prime
 """
-
 struct PolynomialModP
     # fields
     polynomial::PolynomialSparse
@@ -20,7 +19,7 @@ struct PolynomialModP
     # no zero case?
     # inner constructor
     function PolynomialModP(poly::PolynomialSparse, p::Int)
-        @assert isprime(p)
+        # @assert isprime(p)
         if isempty(poly)
             poly = PolynomialSparse()
         end
