@@ -6,6 +6,11 @@
 #################################################################################################
 #################################################################################################
 
+
+###########################
+# SYMMETRIC MOD FUNCTIONS #
+###########################
+
 """
 Create a method for the symmetric mod for intgers
 """
@@ -32,6 +37,10 @@ function smod(f::PolynomialSparse128, p::Integer)::PolynomialSparse128
     end
     return PolynomialSparse128(smod_vector)
 end
+
+#################
+# CRT FUNCTIONS #
+#################
 
 """
 Implments the CRT using two 2-element vectors of integers.
@@ -64,7 +73,6 @@ function CRT_poly(p1::PolynomialSparse128, p2::PolynomialSparse128, n::Integer, 
             if iszero(leading(a))
                 nothing
             else
-                @show leading(a).degree
                 delete_element!(a.terms, a.dict, leading(a).degree)
             end
         end
@@ -124,12 +132,16 @@ function CRT_poly(p1::PolynomialModP128, p2::PolynomialModP128)::PolynomialModP1
     return PolynomialModP(c, n*m)
 end
 
+######################
+# CRT MULTIPLICATION #
+######################
+
 """
 Polynomial128 Multiplication using the CRT
 """
 function multiplication(a::PolynomialSparse128, b::PolynomialSparse128)
     height_a = maximum(abs.(coeffs(a)))
-    height_b = maximum(abs.((coeffs(b))))
+    height_b = maximum(abs.(coeffs(b)))
     B = 2*height_a*height_b*min(degree(a)+1, degree(b)+1)
     p = 3
     M = p

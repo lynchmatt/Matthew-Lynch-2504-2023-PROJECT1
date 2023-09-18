@@ -45,3 +45,8 @@ include("polynomialmodp_test.jl")
 include("factorization_test.jl")
 factor_test_poly()
 
+####
+# Execute unit tests for CRT multiplication
+###
+include("CRT_test.jl")
+

@@ -1,12 +1,5 @@
 using DataStructures, Random
 
-
-# This code here is for meant to help with Project 1.
-# It is not code that should be directly used in the project.
-# Students can rather copy the relevant bits and incorporate it in their own code.
-
-# It is basically a form of "wrapping" of the MutableLinkedList type from DataStructures.jl, which supports staying sorted, iteration, and dictionary access.
-
 #############
 # iteration #
 #############
@@ -17,10 +10,6 @@ Makes the linked list iterable.
 function iterate(lst::MutableLinkedList{T}, state=lst.node.next) where T 
     state == lst.node.prev ? nothing : (lst.node.data, lst.node.next)
 end
-
-#########################
-# Demonstrate iteration #
-#########################
 
 
 ##################################################
@@ -41,14 +30,9 @@ function insert_sorted!(    lst::MutableLinkedList{V},
                             key::K,
                             value::V)::Nothing where {K,V}
 
-    #Note that MutableLinkedList is implemented as a doubly pointed linked list 
-    #The element lst.node is a root which points at the head and the tail.
-    # lst.node.prev is the last element of the list
-    # lst.node.next is the first element of the list
 
     haskey(dict, key) && error("Key is already in dict")
     
-    #If list is empty or the value is greater than end of list, push at end
     if isempty(lst) || last(lst) <= value
         push!(lst, value)
         dict[key] = lst.node.prev #point to last since value just added to last
@@ -112,16 +96,4 @@ get_element(    lst::MutableLinkedList{V},
                 dict::Dict{K, DataStructures.ListNode{V}},
                 key::K) where {K,V} = haskey(dict, key) ? dict[key].data : nothing
 
-"""
-Returns the element following the element associated with the key `key` or `nothing` if there is no next element.
-Throws an error if `key` is not available.
-"""
-function get_next_element(  lst::MutableLinkedList{V}, 
-                            dict::Dict{K, DataStructures.ListNode{V}},
-                            key::K) where {K,V}
-    
-    haskey(dict, key) || error("Key is not in dict")
-    node = dict[key]
-    node.next == lst.node && return nothing
-    return node.next.data
-end
+
