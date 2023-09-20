@@ -83,7 +83,6 @@ function +(p::PolynomialSparse128, t::Term128)
             insert_sorted!(p.terms, p.dict, checkelement.degree, checkelement)
         end
     end
-
     return p
 end
 

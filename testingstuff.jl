@@ -1,54 +1,35 @@
 using Pkg
 Pkg.activate(".")
 
-#COMMENT OUT ALL ABOVE
 
 include("poly_factorization_project.jl")
-
 
 
 ##### TESTING #####
 s1 = PolynomialSparse128([Term128(3,2), Term128(4,0)])
 s2 = PolynomialSparse128([Term128(6,1), Term128(5,0)])
-s1*s2
-multiplication(s1,s2)
-t1 = rand(PolynomialSparse128)
-t2 = rand(PolynomialSparse128)
-t1*t2
-multiplication(t1,t2)
+s3 = PolynomialSparse128([Term128(2,2)])
+s4 = PolynomialSparse128([Term128(9223372036854775807,1), Term128(5^9,3), Term128(4,80)])
+repsq_power(s2,2)
+s2^2
+@time s2*s4
+@time multiplication(s2,s4)
 
-function CRT_mult_test(;N::Int = 10^2, seed::Int = 0)
-    Random.seed!(seed)
-    for i in 1:N
-        t1 = rand(PolynomialSparse128)
-        t2 = rand(PolynomialSparse128)
-        @assert t1*t2 == multiplication(t1,t2)
-    end
-    println("CRT Basic Multiplication Test - PASSED")
-end
+t1 = PolynomialSparse([Term(3,2), Term(4,0)])
+t2 = PolynomialSparse([Term(6,1), Term(5,0)])
 
-function CRT_commute_test(;N::Int = 10^2, seed::Int = 0)
-    Random.seed!(seed)
-    for i in 1:N
-        t1 = rand(PolynomialSparse128)
-        t2 = rand(PolynomialSparse128)
-        @assert multiplication(t1,t2) == multiplication(t2,t1)
-    end
-    print("CRT commutativity test - PASSED")
-end
+CRT_int([0,4], [3,5])
 
 s3  = PolynomialSparse([Term(3,2), Term(9,1), Term(3,0)])
 d1 = PolynomialDense([Term(4,3), Term(2,9), Term(3,4)])
-s1modp = PolynomialModP(s1,5)
+s1modp = PolynomialModP128(s1,5)
 s2modp = PolynomialModP(s2, 7)
 s3modp = PolynomialModP(s3,11)
 
-
-
-
-
-
-function pow_mod(p::PolynomialModP, n::Int)
+"""
+Implements the repeated squares method of powers for PolynomialModP
+"""
+function repsq_power(p::PolynomialModP, n::Integer)
     # find max binary power needed to reach exponent
     maxpower = Int(trunc(log2(n)))
     exponents = [2^i for i in 0:maxpower]
@@ -63,6 +44,8 @@ function pow_mod(p::PolynomialModP, n::Int)
     end
     return outpoly
 end
+
+
 
 
 function l_pow(p::PolynomialModP, n::Int)

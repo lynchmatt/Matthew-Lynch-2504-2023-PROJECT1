@@ -6,7 +6,7 @@
 #############################################################################
 #############################################################################
 
-function CRT_mult_test(;N::Int = 10^2, seed::Int = 0)
+function CRT_mult_test(;N::Int = 10^3, seed::Int = 0)
     Random.seed!(seed)
     for i in 1:N
         t1 = rand(PolynomialSparse128)
@@ -16,7 +16,7 @@ function CRT_mult_test(;N::Int = 10^2, seed::Int = 0)
     println("CRT Basic Multiplication Test - PASSED")
 end
 
-function CRT_commute_test(;N::Int = 10^2, seed::Int = 0)
+function CRT_commute_test(;N::Int = 10^3, seed::Int = 0)
     Random.seed!(seed)
     for i in 1:N
         t1 = rand(PolynomialSparse128)

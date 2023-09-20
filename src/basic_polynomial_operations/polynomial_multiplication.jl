@@ -94,7 +94,7 @@ function ^(p::PolynomialSparse, n::Int)
 end
 
 """
-Power of a polynomialsparse128.
+Original PolySparse128 power
 """
 function ^(p::PolynomialSparse128, n::Integer)
     n < 0 && error("No negative power")
@@ -106,8 +106,65 @@ function ^(p::PolynomialSparse128, n::Integer)
 end
 
 """
-Power of a polynomialmodp
+Original power of a polynomialmodp
 """
 function ^(p::PolynomialModP, n::Int)
     return PolynomialModP((p.polynomial^n), p.prime)
+end
+
+"""
+Implements the repeated squares method of powers for PolynomialSparse128
+"""
+function repsq_power(p::PolynomialSparse128, n::Integer)
+    # find max binary power needed to reach exponent
+    maxpower = Int(trunc(log2(n)))
+    exponents = [2^i for i in 0:maxpower]
+    binary_string = digits(n, base=2, pad=maxpower) # convert to binary string
+    outpoly = one(Term128)
+    for i in 1:length(exponents)
+        if binary_string[i] == 1
+            outpoly *= ^(p, exponents[i])
+        else
+            nothing
+        end
+    end
+    return outpoly
+end
+
+"""
+Implements the repeated squares method of powers (mod p) for PolynomialSparse128
+"""
+function repsq_pow_mod(p::PolynomialSparse128, n::Integer, prime::Integer)
+    # find max binary power needed to reach exponent
+    maxpower = Int(trunc(log2(n)))
+    exponents = [2^i for i in 0:maxpower]
+    binary_string = digits(n, base=2, pad=maxpower) # convert to binary string
+    outpoly = one(Term128)
+    for i in 1:length(exponents)
+        if binary_string[i] == 1
+            outpoly *= pow_mod(p, exponents[i], prime)
+        else
+            nothing
+        end
+    end
+    return outpoly
+end
+
+"""
+Implements the repeated squares method of powers for PolynomialModP
+"""
+function repsq_power(p::PolynomialModP, n::Integer)
+    # find max binary power needed to reach exponent
+    maxpower = Int(trunc(log2(n)))
+    exponents = [2^i for i in 0:maxpower]
+    binary_string = digits(n, base=2, pad=maxpower) # convert to binary string
+    outpoly = one(Term)
+    for i in 1:length(exponents)
+        if binary_string[i] == 1
+            outpoly *= ^(p, exponents[i])
+        else
+            nothing
+        end
+    end
+    return outpoly
 end

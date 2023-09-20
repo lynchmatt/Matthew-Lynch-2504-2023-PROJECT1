@@ -45,11 +45,12 @@ end
 """
 Implments the CRT using two 2-element vectors of integers.
 """
-function CRT_int(ui::Vector{Integer}, m::Vector{Integer})
+function CRT_int(ui::Vector{T}, m::Vector{T}) where T <: Union{Int64, Int128}
+    ui, m = Int128.(ui), Int128.(m)
     @assert length(ui) == length(m)
     v = Vector{Integer}(undef, length(ui))
     v[1] = ui[1]
-    v[2] = (ui[2] -v[1])*invmod(m[1], m[2]) % m[2]
+    v[2] = (ui[2] -v[1])*int_inverse_mod(m[1], m[2]) % m[2]
     u = v[1] + v[2]*m[1]
     return u
 end
@@ -59,6 +60,7 @@ end
 Implements the CRT for two polynomialsparse128s and two primes, using the CRT_int function.
 """
 function CRT_poly(p1::PolynomialSparse128, p2::PolynomialSparse128, n::Integer, m::Integer)::PolynomialSparse128
+    n, m = Int128(n), Int128.(m)
     a = deepcopy(p1)
     b = deepcopy(p2)
     x = x_polysparse128()
@@ -86,7 +88,7 @@ function CRT_poly(p1::PolynomialSparse128, p2::PolynomialSparse128, n::Integer, 
                 delete_element!(b.terms, b.dict, leading(b).degree)
             end
         end
-        ck = CRT_int([Int(ak), Int(bk)], [n, m])
+        ck = CRT_int([ak, bk], [n, m])
         c = c + ck*x^k
     end
     return c

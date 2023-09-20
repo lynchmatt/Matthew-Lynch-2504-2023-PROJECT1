@@ -282,20 +282,15 @@ function mod(f::PolynomialSparse128, p::Integer)::PolynomialSparse128
 end
 
 """
-Power of a PolynomialSparse128 mod prime, using repeatedsquares (for Task 6)
+Power of a PolynomialSparse128 mod prime
 """
-function pow_mod(p::PolynomialSparse128, n::Int)
-    # find max binary power needed to reach exponent
-    maxpower = Int(trunc(log2(n)))
-    exponents = [2^i for i in 0:maxpower]
-    binary_string = digits(n, base=2, pad=maxpower) # convert to binary string
-    outpoly = one(Term128)
-    for i in 1:length(exponents)
-        if binary_string[i] == 1
-            outpoly *= ^(p, exponents[i])
-        else
-            nothing
-        end
+function pow_mod(p::PolynomialSparse128, n::Integer, prime::Integer)
+    n < 0 && error("No negative power")
+    out = one(p) # unit polynomial
+    for _ in 1:n # up the value of integer n
+        out *= p # multiply 
+        out = mod(out, prime)
     end
-    return outpoly
+    return out
 end
+
