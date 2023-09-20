@@ -32,7 +32,7 @@ struct PolynomialSparse128
         end
         # initialise empty linked list and dictionary
         lst = MutableLinkedList{Term128}()
-        dict = Dict{Int, DataStructures.ListNode{Term128}}()
+        dict = Dict{Integer, DataStructures.ListNode{Term128}}()
         # create list and dictionary out of the vector of terms
         for t in terms
             insert_sorted!(lst, dict, t.degree, t)

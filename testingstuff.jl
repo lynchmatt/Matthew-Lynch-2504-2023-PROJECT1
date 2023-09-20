@@ -8,15 +8,18 @@ include("poly_factorization_project.jl")
 ##### TESTING #####
 s1 = PolynomialSparse128([Term128(3,2), Term128(4,0)])
 s2 = PolynomialSparse128([Term128(6,1), Term128(5,0)])
-s3 = PolynomialSparse128([Term128(2,2)])
-s4 = PolynomialSparse128([Term128(9223372036854775807,1), Term128(5^9,3), Term128(4,80)])
+s3 = s1*s2
+factor(s3,5)
+CRT_factor(s3,5)
 repsq_power(s2,2)
 s2^2
-@time s2*s4
-@time multiplication(s2,s4)
+@time s3*s4
+@time multiplication(s3,s4)
 
 t1 = PolynomialSparse([Term(3,2), Term(4,0)])
 t2 = PolynomialSparse([Term(6,1), Term(5,0)])
+t3 = PolynomialSparse([Term(0,0)])
+t3.dict
 
 CRT_int([0,4], [3,5])
 

@@ -185,6 +185,7 @@ function factor(f::PolynomialModP)::Vector{Tuple{PolynomialModP,Int}}
 end
 
 
+
 #############
 # EXPANSION #
 #############

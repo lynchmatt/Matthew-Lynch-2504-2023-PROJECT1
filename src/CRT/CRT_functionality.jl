@@ -12,7 +12,7 @@
 ###########################
 
 """
-Create a method for the symmetric mod for intgers
+Create a method for the symmetric mod for integers
 """
 function smod(a::Integer, m::Integer)
     if mod(a,m) <= m//2
@@ -46,7 +46,7 @@ end
 Implments the CRT using two 2-element vectors of integers.
 """
 function CRT_int(ui::Vector{T}, m::Vector{T}) where T <: Union{Int64, Int128}
-    ui, m = Int128.(ui), Int128.(m)
+    ui, m = Integer.(ui), Integer.(m)
     @assert length(ui) == length(m)
     v = Vector{Integer}(undef, length(ui))
     v[1] = ui[1]
@@ -88,7 +88,7 @@ function CRT_poly(p1::PolynomialSparse128, p2::PolynomialSparse128, n::Integer, 
                 delete_element!(b.terms, b.dict, leading(b).degree)
             end
         end
-        ck = CRT_int([ak, bk], [n, m])
+        ck = CRT_int([Int128(ak), Int128(bk)], [Int128(n), Int128(m)])
         c = c + ck*x^k
     end
     return c
@@ -144,9 +144,9 @@ Polynomial128 Multiplication using the CRT
 function multiplication(a::PolynomialSparse128, b::PolynomialSparse128)
     height_a = maximum(abs.(coeffs(a)))
     height_b = maximum(abs.(coeffs(b)))
-    B = 2*height_a*height_b*min(degree(a)+1, degree(b)+1)
-    p = 3
-    M = p
+    B = Int128(2*height_a*height_b*min(degree(a)+1, degree(b)+1))
+    p = Int128(3)
+    M = Int128(p)
     moda = PolynomialModP128(a,M)
     modb = PolynomialModP128(b,M)
     c = (moda * modb).polynomial
@@ -155,7 +155,7 @@ function multiplication(a::PolynomialSparse128, b::PolynomialSparse128)
         moda = PolynomialModP128(a,p)
         modb = PolynomialModP128(b,p)
         c_prime = moda*modb
-        c = CRT_poly(c, c_prime.polynomial, M, p)
+        c = CRT_poly(c, c_prime.polynomial, Int128(M), Int128(p))
         M *= p
     end
     return smod(c,M)

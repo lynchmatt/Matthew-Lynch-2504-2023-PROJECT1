@@ -47,8 +47,8 @@ println("($poly3) ÷ ($poly1) mod 3 = $(divide(poly3, poly1)(3))")
 
 println("We can also factorise polynomials modulo p, where p is prime. Output is a vector of tuples of polynomials and their multiplicity,
  such that their product mod p is the input polynomial.  Again using mod 3: ")
-println("$poly1 factorised mod 3 = $(factor(poly1,3))")
 factorisation = factor(poly1,3)
+println("$poly1 factorised mod 3 = $(factorisation[1])")
 println("And this factorisation can be reconstructed, with output given mod prime: ")
 pr = mod(expand_factorization(factorisation),3)
 println("Reconstructing: ", pr)

@@ -34,6 +34,7 @@ end
 Add a polynomialsparse and a term.
 """
 function +(p::PolynomialSparse, t::Term)
+    # include edge cases for zero term and zero polynomial
     if iszero(t) == true
         return p
     else

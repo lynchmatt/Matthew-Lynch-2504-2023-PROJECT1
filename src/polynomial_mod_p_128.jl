@@ -18,7 +18,7 @@ struct PolynomialModP128
     prime::Integer
     # inner constructor
     function PolynomialModP128(poly::PolynomialSparse128, p::Integer)
-        if isempty(poly)
+        if iszero(poly)
             poly = PolynomialSparse128()
         end
         return new(mod(poly,p),p)

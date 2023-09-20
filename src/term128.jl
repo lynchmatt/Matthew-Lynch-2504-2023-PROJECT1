@@ -19,7 +19,7 @@ A Term128.
 """
 struct Term128  #structs are immutable by default
     coeff::Int128
-    degree::Int
+    degree::Integer
     function Term128(coeff::Integer, degree::Integer)
         coeff = Int128(coeff)
         degree < 0 && error("Degree must be non-negative")

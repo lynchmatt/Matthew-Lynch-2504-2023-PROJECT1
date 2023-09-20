@@ -64,6 +64,7 @@ function factor_test_polysparse128(;N::Int = 10, seed::Int = 0, primes::Vector{}
     println("\nfactor_test_polysparse128 - PASSED")
 end
 
+
 """
 Test factorization of polynomialmodp
 """
@@ -82,4 +83,23 @@ function factor_test_polymodp(;N::Int = 10, seed::Int = 0, primes::Vector{} = [5
     println("\nfactor_test_polymodp - PASSED")
 end
 
-factor_test_polymodp()
+
+"""
+Test factorisation using CRT and repeat squares methods.
+"""
+function CRT_factor_test(;N::Int = 10, seed::Int = 0, primes::Vector{} = [5,17,19])
+    Random.seed!(seed)
+    for prime in primes
+        print("\ndoing prime = $prime \t")
+        for _ in 1:N
+            print(".")
+            p = rand(PolynomialSparse128)
+            factorization = CRT_factor(p, prime)
+            pr = mod(CRT_expand_factorization(factorization),prime)
+            @assert mod(p-pr,prime) == 0 
+        end
+    end
+    println("\nCRT Factorisation Test - PASSED")
+end
+
+
