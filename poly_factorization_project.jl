@@ -6,7 +6,7 @@
 #############################################################################
 #############################################################################
 
-using Distributions, StatsBase, Random, DataStructures, Primes
+using Distributions, StatsBase, Random, DataStructures, Primes, BenchmarkTools
 
 import Base: %
 import Base: push!, pop!, iszero, show, isless, map, map!, iterate, length, last

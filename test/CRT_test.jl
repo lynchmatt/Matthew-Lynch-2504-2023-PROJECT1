@@ -42,5 +42,3 @@ function CRT_time_test()
     println("CRT Multiplication")
     @time multiplication(p3,p4)
 end
-
-CRT_time_test()

@@ -12,7 +12,7 @@
 ###########################
 
 """
-Create a method for the symmetric mod for integers
+Symmetric mod for integers
 """
 function smod(a::Integer, m::Integer)
     if mod(a,m) <= m//2

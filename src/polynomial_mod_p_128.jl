@@ -7,7 +7,7 @@
 #############################################################################
 
 ##########################################
-# Polynomialmodp type and construction #
+# Polynomialmodp type and construction   #
 ##########################################
 """
 PolynomialModP128 type - takes a PolynomialSparse128 and a prime as fields, and does operations mod prime

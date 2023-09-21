@@ -42,7 +42,6 @@ function CRT_factor(f::PolynomialSparse128, prime::Integer)::Vector{Tuple{Polyno
 end
 
 """
-first(factorization[1])^last(factorization[1])
 Expand a factorization for polynomialsparse128 using CRT
 """
 function CRT_expand_factorization(factorization::Vector{Tuple{PolynomialSparse128,Integer}})::PolynomialSparse128

@@ -41,13 +41,15 @@ one(::Type{Term})::Term = Term(1,0)
 ###########
 # Display #
 ###########
-
+"""
+Converts from integers to their superscript equivalents.
+"""
 function super(s)
     super_chars = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']
     res = ""
     for c in s
         if c >= '0' && c <= '9'
-            res *= super_chars[c - '0' + 1]
+            res *= super_chars[c - '0' + 1] # plus 1 for indexing
         end
     end
     return res
@@ -58,8 +60,6 @@ Show a term.
 """
 function show(io::IO, t::Term)
     #define the coefficient and degree parts separately, then combine into one with io
-    #term(1,0)
-    # IF ZERO POLY PRINT 
         #first determine if constant
         coefficient, xdegree = 0,0
         if t.degree == 0

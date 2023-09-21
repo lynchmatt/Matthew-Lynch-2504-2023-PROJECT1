@@ -40,10 +40,15 @@ include("polynomialsparse128_test.jl")
 include("polynomialmodp_test.jl")
 
 ####
-# Execute unit tests for polynomial factorization
+# Execute unit tests for all types of polynomial factorization
 ####
 include("factorization_test.jl")
-factor_test_poly()
+factor_test_polydense()
+factor_test_polysparse()
+factor_test_polysparse128()
+factor_test_polymodp()
+CRT_factor_test()
+
 
 ####
 # Execute unit tests for CRT multiplication
